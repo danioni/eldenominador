@@ -16,11 +16,11 @@ import {
   ComposedChart,
   Legend,
 } from "recharts";
-import { liquidityData, getLatestMetrics } from "@/lib/data";
+import { liquidityData, getLatestMetrics, MONTHLY_DATA_START } from "@/lib/data";
 import MetricCard from "./MetricCard";
 import ChartSection from "./ChartSection";
 
-type TimeRange = "1Y" | "3Y" | "5Y" | "ALL";
+type TimeRange = "1Y" | "5Y" | "10Y" | "50Y" | "ALL";
 
 const COLORS = {
   green: "#00ff88",
@@ -32,6 +32,12 @@ const COLORS = {
   cyan: "#00ddff",
   muted: "#55556a",
 };
+
+function formatValue(v: number): string {
+  if (v >= 1) return `$${v.toFixed(2)}T`;
+  if (v >= 0.001) return `$${(v * 1000).toFixed(1)}B`;
+  return `$${(v * 1000000).toFixed(0)}M`;
+}
 
 function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload) return null;
@@ -55,7 +61,7 @@ function CustomTooltip({ active, payload, label }: any) {
           />
           <span style={{ color: "var(--text-muted)" }}>{entry.name}:</span>
           <span className="font-medium tabular-nums" style={{ color: entry.color }}>
-            ${entry.value.toFixed(2)}T
+            {formatValue(entry.value)}
           </span>
         </div>
       ))}
@@ -100,7 +106,7 @@ function TimeRangeSelector({
   range: TimeRange;
   onChange: (r: TimeRange) => void;
 }) {
-  const options: TimeRange[] = ["1Y", "3Y", "5Y", "ALL"];
+  const options: TimeRange[] = ["1Y", "5Y", "10Y", "50Y", "ALL"];
   return (
     <div className="flex gap-1 p-1 rounded-lg" style={{ background: "rgba(16, 16, 26, 0.6)", border: "1px solid var(--border-subtle)" }}>
       {options.map((opt) => (
@@ -139,15 +145,26 @@ export default function Dashboard() {
   const metrics = useMemo(() => getLatestMetrics(), []);
 
   const filteredData = useMemo(() => {
-    const total = liquidityData.length;
     if (range === "1Y") return liquidityData.slice(-12);
-    if (range === "3Y") return liquidityData.slice(-36);
     if (range === "5Y") return liquidityData.slice(-60);
-    return liquidityData;
+    if (range === "10Y") return liquidityData.slice(-120);
+    if (range === "50Y") {
+      // 50 years back: annual data (1975-2014) + monthly (2015-2025)
+      const annualStart = Math.max(0, MONTHLY_DATA_START - 40); // ~1975
+      return liquidityData.slice(annualStart);
+    }
+    return liquidityData; // ALL: 1913-2025
   }, [range]);
 
-  // Thin out labels for x-axis
-  const tickInterval = range === "1Y" ? 1 : range === "3Y" ? 5 : range === "5Y" ? 11 : 17;
+  // Tick intervals adapt to data density
+  const tickInterval = useMemo(() => {
+    const len = filteredData.length;
+    if (range === "1Y") return 1;
+    if (range === "5Y") return 11;
+    if (range === "10Y") return 23;
+    // For long ranges with mixed annual+monthly, show ~10-15 labels
+    return Math.max(1, Math.floor(len / 12));
+  }, [range, filteredData.length]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
@@ -214,7 +231,7 @@ export default function Dashboard() {
       {/* Denominator Index - hero chart */}
       <ChartSection
         title="Índice Denominador"
-        subtitle="Compuesto ponderado: 60% M2 Global + 40% Balance Bancos Centrales · Base 100 = Enero 2015"
+        subtitle="Compuesto ponderado: 60% M2 Global + 40% Balance Bancos Centrales · Base 100 = 1913"
         delay={3}
       >
         <div className="h-[320px]">
@@ -241,6 +258,7 @@ export default function Dashboard() {
                 axisLine={false}
                 tickLine={false}
                 domain={["auto", "auto"]}
+                tickFormatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(0)}K` : `${v}`}
               />
               <Tooltip content={<DenominatorTooltip />} />
               <Area

@@ -8,6 +8,17 @@ interface MetricCardProps {
   delay?: number;
 }
 
+function formatMetricValue(value: number, unit: string): string {
+  if (unit === "T") return `$${value.toFixed(2)}`;
+  // Index values: format with locale separators
+  if (value >= 1000) return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
+  return value.toFixed(1);
+}
+
+function formatChangeValue(change: number): string {
+  return `${Math.abs(change)}%`;
+}
+
 export default function MetricCard({ label, value, change, unit, delay = 0 }: MetricCardProps) {
   const isPositive = change >= 0;
   const changeColor = isPositive ? "var(--accent-green)" : "var(--accent-red)";
@@ -32,8 +43,7 @@ export default function MetricCard({ label, value, change, unit, delay = 0 }: Me
           className="text-[28px] font-light tabular-nums tracking-tight"
           style={{ color: "var(--text-primary)" }}
         >
-          {unit === "T" ? "$" : ""}
-          {value.toFixed(unit === "" ? 1 : 2)}
+          {formatMetricValue(value, unit)}
         </span>
         {unit && (
           <span className="text-xs font-light" style={{ color: "var(--text-secondary)" }}>
@@ -52,11 +62,10 @@ export default function MetricCard({ label, value, change, unit, delay = 0 }: Me
             background: isPositive ? "rgba(0,255,136,0.08)" : "rgba(255,51,85,0.08)",
           }}
         >
-          {arrow} {Math.abs(change)}
-          {unit === "T" ? "%" : unit === "" ? " pts" : "%"}
+          {arrow} {formatChangeValue(change)}
         </span>
         <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>
-          YoY
+          CAGR
         </span>
       </div>
     </div>
