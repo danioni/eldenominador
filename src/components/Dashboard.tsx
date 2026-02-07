@@ -9,18 +9,14 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LineChart,
   Line,
-  BarChart,
-  Bar,
   ComposedChart,
-  Legend,
 } from "recharts";
-import { liquidityData, getLatestMetrics, MONTHLY_DATA_START } from "@/lib/data";
+import { liquidityData, getLatestMetrics } from "@/lib/data";
 import MetricCard from "./MetricCard";
 import ChartSection from "./ChartSection";
 
-type TimeRange = "1Y" | "5Y" | "10Y" | "50Y" | "ALL";
+type TimeRange = "10Y" | "25Y" | "50Y" | "ALL";
 
 const COLORS = {
   green: "#00ff88",
@@ -106,7 +102,7 @@ function TimeRangeSelector({
   range: TimeRange;
   onChange: (r: TimeRange) => void;
 }) {
-  const options: TimeRange[] = ["1Y", "5Y", "10Y", "50Y", "ALL"];
+  const options: TimeRange[] = ["10Y", "25Y", "50Y", "ALL"];
   return (
     <div className="flex gap-1 p-1 rounded-lg" style={{ background: "rgba(16, 16, 26, 0.6)", border: "1px solid var(--border-subtle)" }}>
       {options.map((opt) => (
@@ -140,31 +136,52 @@ function TimeRangeSelector({
   );
 }
 
+function ScaleToggle({ isLog, onToggle }: { isLog: boolean; onToggle: () => void }) {
+  return (
+    <button
+      onClick={onToggle}
+      className="px-3.5 py-1.5 rounded-md text-[10px] tracking-wider uppercase transition-all"
+      style={{
+        background: isLog ? "rgba(0,255,136,0.12)" : "transparent",
+        color: isLog ? "var(--accent-green)" : "var(--text-muted)",
+        border: isLog ? "1px solid rgba(0,255,136,0.2)" : "1px solid var(--border-subtle)",
+      }}
+    >
+      LOG
+    </button>
+  );
+}
+
 export default function Dashboard() {
   const [range, setRange] = useState<TimeRange>("ALL");
+  const [logScale, setLogScale] = useState(false);
   const metrics = useMemo(() => getLatestMetrics(), []);
 
   const filteredData = useMemo(() => {
-    if (range === "1Y") return liquidityData.slice(-12);
-    if (range === "5Y") return liquidityData.slice(-60);
-    if (range === "10Y") return liquidityData.slice(-120);
-    if (range === "50Y") {
-      // 50 years back: annual data (1975-2014) + monthly (2015-2025)
-      const annualStart = Math.max(0, MONTHLY_DATA_START - 40); // ~1975
-      return liquidityData.slice(annualStart);
-    }
+    if (range === "10Y") return liquidityData.slice(-10);
+    if (range === "25Y") return liquidityData.slice(-25);
+    if (range === "50Y") return liquidityData.slice(-50);
     return liquidityData; // ALL: 1913-2025
   }, [range]);
 
-  // Tick intervals adapt to data density
-  const tickInterval = useMemo(() => {
-    const len = filteredData.length;
-    if (range === "1Y") return 1;
-    if (range === "5Y") return 11;
-    if (range === "10Y") return 23;
-    // For long ranges with mixed annual+monthly, show ~10-15 labels
-    return Math.max(1, Math.floor(len / 12));
-  }, [range, filteredData.length]);
+  // Build custom ticks for clean X axis labels
+  const xTicks = useMemo(() => {
+    const dates = filteredData.map(d => d.date);
+    const span = dates.length;
+    if (span <= 12) return undefined; // show all years
+    const yearStep = span <= 25 ? 5 : span <= 60 ? 10 : 20;
+    const firstYear = parseInt(dates[0]);
+    const lastYear = parseInt(dates[dates.length - 1]);
+    const startYear = Math.ceil(firstYear / yearStep) * yearStep;
+    const ticks: string[] = [];
+    for (let y = startYear; y <= lastYear; y += yearStep) {
+      const d = `${y}`;
+      if (dates.includes(d)) ticks.push(d);
+    }
+    if (!ticks.includes(dates[0])) ticks.unshift(dates[0]);
+    if (!ticks.includes(dates[dates.length - 1])) ticks.push(dates[dates.length - 1]);
+    return ticks;
+  }, [filteredData]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
@@ -191,8 +208,9 @@ export default function Dashboard() {
         <div className="divider-gradient mt-8" />
       </div>
 
-      {/* Time range */}
-      <div className="flex justify-end mb-6">
+      {/* Time range + scale toggle */}
+      <div className="flex justify-end items-center gap-3 mb-6">
+        <ScaleToggle isLog={logScale} onToggle={() => setLogScale(!logScale)} />
         <TimeRangeSelector range={range} onChange={setRange} />
       </div>
 
@@ -248,7 +266,8 @@ export default function Dashboard() {
                 dataKey="date"
                 stroke="var(--text-muted)"
                 tick={{ fontSize: 10 }}
-                interval={tickInterval}
+                ticks={xTicks}
+
                 axisLine={false}
                 tickLine={false}
               />
@@ -257,7 +276,9 @@ export default function Dashboard() {
                 tick={{ fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}
-                domain={["auto", "auto"]}
+                scale={logScale ? "log" : "auto"}
+                domain={logScale ? ["auto", "auto"] : ["auto", "auto"]}
+                allowDataOverflow={logScale}
                 tickFormatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(0)}K` : `${v}`}
               />
               <Tooltip content={<DenominatorTooltip />} />
@@ -308,7 +329,8 @@ export default function Dashboard() {
                   dataKey="date"
                   stroke="var(--text-muted)"
                   tick={{ fontSize: 10 }}
-                  interval={tickInterval}
+                  ticks={xTicks}
+  
                   axisLine={false}
                   tickLine={false}
                 />
@@ -317,6 +339,9 @@ export default function Dashboard() {
                   tick={{ fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
+                  scale={logScale ? "log" : "auto"}
+                  domain={logScale ? ["auto", "auto"] : [0, "auto"]}
+                  allowDataOverflow={logScale}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Area type="monotone" dataKey="m2_china" name="China" stroke={COLORS.red} fill="url(#gradChina)" strokeWidth={1.5} />
@@ -368,7 +393,8 @@ export default function Dashboard() {
                   dataKey="date"
                   stroke="var(--text-muted)"
                   tick={{ fontSize: 10 }}
-                  interval={tickInterval}
+                  ticks={xTicks}
+  
                   axisLine={false}
                   tickLine={false}
                 />
@@ -377,6 +403,9 @@ export default function Dashboard() {
                   tick={{ fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
+                  scale={logScale ? "log" : "auto"}
+                  domain={logScale ? ["auto", "auto"] : [0, "auto"]}
+                  allowDataOverflow={logScale}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Area type="monotone" dataKey="fed_bs" name="Fed" stroke={COLORS.blue} fill="url(#gradFed)" strokeWidth={1.5} />
@@ -418,7 +447,8 @@ export default function Dashboard() {
                   dataKey="date"
                   stroke="var(--text-muted)"
                   tick={{ fontSize: 10 }}
-                  interval={tickInterval}
+                  ticks={xTicks}
+  
                   axisLine={false}
                   tickLine={false}
                 />
@@ -427,6 +457,9 @@ export default function Dashboard() {
                   tick={{ fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
+                  scale={logScale ? "log" : "auto"}
+                  domain={logScale ? ["auto", "auto"] : [0, "auto"]}
+                  allowDataOverflow={logScale}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Area
@@ -489,7 +522,8 @@ export default function Dashboard() {
                   dataKey="date"
                   stroke="var(--text-muted)"
                   tick={{ fontSize: 10 }}
-                  interval={tickInterval}
+                  ticks={xTicks}
+  
                   axisLine={false}
                   tickLine={false}
                 />
@@ -498,6 +532,9 @@ export default function Dashboard() {
                   tick={{ fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
+                  scale={logScale ? "log" : "auto"}
+                  domain={logScale ? ["auto", "auto"] : [0, "auto"]}
+                  allowDataOverflow={logScale}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Area

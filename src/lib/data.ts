@@ -76,40 +76,37 @@ const historicalAnchors: AnnualSnapshot[] = [
   // 2003: Post dot-com, Iraq War, Greenspan's low rates
   { year: 2003, m2_us: 6.070, m2_eu: 5.800, m2_japan: 2.500, m2_china: 2.800, fed_bs: 0.720, ecb_bs: 0.900, boj_bs: 1.000, pboc_bs: 0.700, tga: 0.035, rrp: 0 },
   // 2007: Pre-GFC peak — shadow banking peak
-  { year: 2007, m2_us: 7.500, m2_eu: 8.200, m2_japan: 2.800, m2_china: 5.200, fed_bs: 0.870, ecb_bs: 1.500, boj_bs: 1.050, pboc_bs: 1.800, tga: 0.040, rrp: 0 },
+  { year: 2007, m2_us: 7.500, m2_eu: 8.200, m2_japan: 2.800, m2_china: 5.400, fed_bs: 0.870, ecb_bs: 1.500, boj_bs: 1.050, pboc_bs: 1.800, tga: 0.040, rrp: 0 },
   // 2009: GFC response — QE1
   { year: 2009, m2_us: 8.500, m2_eu: 8.800, m2_japan: 3.000, m2_china: 8.500, fed_bs: 2.100, ecb_bs: 2.000, boj_bs: 1.200, pboc_bs: 2.800, tga: 0.100, rrp: 0 },
   // 2012: QE3 "infinity", ECB "whatever it takes"
-  { year: 2012, m2_us: 10.400, m2_eu: 9.600, m2_japan: 3.400, m2_china: 15.000, fed_bs: 2.900, ecb_bs: 3.000, boj_bs: 1.600, pboc_bs: 4.200, tga: 0.080, rrp: 0.10 },
+  { year: 2012, m2_us: 10.400, m2_eu: 9.600, m2_japan: 3.400, m2_china: 15.500, fed_bs: 2.900, ecb_bs: 3.000, boj_bs: 1.600, pboc_bs: 4.200, tga: 0.080, rrp: 0.10 },
   // 2014: End of QE3, start of ECB QE, Abenomics
-  { year: 2014, m2_us: 11.500, m2_eu: 10.500, m2_japan: 7.800, m2_china: 19.500, fed_bs: 4.500, ecb_bs: 2.000, boj_bs: 2.900, pboc_bs: 5.000, tga: 0.200, rrp: 0.15 },
+  { year: 2014, m2_us: 11.650, m2_eu: 10.500, m2_japan: 7.800, m2_china: 20.000, fed_bs: 4.500, ecb_bs: 2.000, boj_bs: 2.900, pboc_bs: 5.000, tga: 0.200, rrp: 0.15 },
+  // 2015: ECB QE launch, Fed normalization
+  { year: 2015, m2_us: 12.300, m2_eu: 10.800, m2_japan: 8.200, m2_china: 21.500, fed_bs: 4.480, ecb_bs: 2.700, boj_bs: 3.400, pboc_bs: 5.300, tga: 0.300, rrp: 0.20 },
+  // 2016: Brexit, BOJ negative rates, Trump election
+  { year: 2016, m2_us: 13.200, m2_eu: 11.400, m2_japan: 8.700, m2_china: 23.000, fed_bs: 4.450, ecb_bs: 3.400, boj_bs: 4.000, pboc_bs: 5.500, tga: 0.350, rrp: 0.15 },
+  // 2017: Synchronized global growth, Fed starts QT
+  { year: 2017, m2_us: 13.800, m2_eu: 12.400, m2_japan: 9.100, m2_china: 24.500, fed_bs: 4.400, ecb_bs: 4.400, boj_bs: 4.800, pboc_bs: 5.800, tga: 0.200, rrp: 0.10 },
+  // 2018: Fed hiking + QT, trade war
+  { year: 2018, m2_us: 14.350, m2_eu: 12.800, m2_japan: 9.400, m2_china: 25.800, fed_bs: 4.100, ecb_bs: 4.700, boj_bs: 5.200, pboc_bs: 5.600, tga: 0.350, rrp: 0.05 },
+  // 2019: Fed pivot, repo crisis, rate cuts
+  { year: 2019, m2_us: 15.300, m2_eu: 13.100, m2_japan: 9.700, m2_china: 27.500, fed_bs: 4.200, ecb_bs: 4.700, boj_bs: 5.500, pboc_bs: 5.800, tga: 0.400, rrp: 0.00 },
+  // 2020: COVID — massive QE, M2 explosion
+  { year: 2020, m2_us: 19.100, m2_eu: 14.800, m2_japan: 10.500, m2_china: 32.000, fed_bs: 7.400, ecb_bs: 7.000, boj_bs: 6.700, pboc_bs: 6.200, tga: 1.600, rrp: 0.00 },
+  // 2021: Peak stimulus, RRP surge
+  { year: 2021, m2_us: 21.600, m2_eu: 16.000, m2_japan: 11.000, m2_china: 36.000, fed_bs: 8.800, ecb_bs: 8.600, boj_bs: 7.200, pboc_bs: 6.500, tga: 0.450, rrp: 1.90 },
+  // 2022: Tightening begins, inflation fight
+  { year: 2022, m2_us: 21.200, m2_eu: 15.200, m2_japan: 10.400, m2_china: 38.000, fed_bs: 8.500, ecb_bs: 8.000, boj_bs: 7.400, pboc_bs: 6.300, tga: 0.500, rrp: 2.20 },
+  // 2023: QT continues, RRP drawdown
+  { year: 2023, m2_us: 20.800, m2_eu: 14.500, m2_japan: 10.200, m2_china: 40.500, fed_bs: 7.700, ecb_bs: 7.000, boj_bs: 7.500, pboc_bs: 6.500, tga: 0.750, rrp: 0.70 },
+  // 2024: Pivot whispers, gradual easing
+  { year: 2024, m2_us: 21.500, m2_eu: 14.800, m2_japan: 10.000, m2_china: 43.000, fed_bs: 7.100, ecb_bs: 6.500, boj_bs: 7.600, pboc_bs: 7.000, tga: 0.800, rrp: 0.40 },
+  // 2025: Re-expansion cycle
+  { year: 2025, m2_us: 22.300, m2_eu: 15.200, m2_japan: 10.200, m2_china: 45.500, fed_bs: 7.000, ecb_bs: 6.300, boj_bs: 7.800, pboc_bs: 7.500, tga: 0.700, rrp: 0.30 },
 ];
 
-// Monthly phases from 2015-2025
-const monthlyPhases = [
-  // 2015: Post-taper, slow normalization
-  { m2_g: 0.004, fed_g: -0.001, ecb_g: 0.025, boj_g: 0.015, pboc_g: 0.005, tga_d: 0.3, rrp_d: 0.2 },
-  // 2016: Global uncertainty, Brexit, BOJ negative rates
-  { m2_g: 0.005, fed_g: 0.001, ecb_g: 0.02, boj_g: 0.018, pboc_g: 0.004, tga_d: 0.35, rrp_d: 0.15 },
-  // 2017: Synchronized global growth, Fed starts QT
-  { m2_g: 0.004, fed_g: -0.003, ecb_g: 0.015, boj_g: 0.012, pboc_g: 0.006, tga_d: 0.2, rrp_d: 0.1 },
-  // 2018: Fed hiking + QT, trade war starts
-  { m2_g: 0.003, fed_g: -0.005, ecb_g: 0.005, boj_g: 0.008, pboc_g: 0.004, tga_d: 0.35, rrp_d: 0.05 },
-  // 2019: Fed pivot, repo crisis Sep, rate cuts begin
-  { m2_g: 0.005, fed_g: 0.008, ecb_g: 0.003, boj_g: 0.005, pboc_g: 0.005, tga_d: 0.4, rrp_d: 0.0 },
-  // 2020: COVID expansion — massive QE
-  { m2_g: 0.018, fed_g: 0.06, ecb_g: 0.03, boj_g: 0.015, pboc_g: 0.01, tga_d: 0.8, rrp_d: 0.0 },
-  // 2021: Peak stimulus
-  { m2_g: 0.012, fed_g: 0.02, ecb_g: 0.02, boj_g: 0.01, pboc_g: 0.008, tga_d: 0.7, rrp_d: 1.5 },
-  // 2022: Tightening begins
-  { m2_g: -0.002, fed_g: -0.01, ecb_g: 0.005, boj_g: 0.008, pboc_g: 0.006, tga_d: 0.5, rrp_d: 2.2 },
-  // 2023: QT continues
-  { m2_g: 0.002, fed_g: -0.008, ecb_g: -0.005, boj_g: 0.005, pboc_g: 0.005, tga_d: 0.7, rrp_d: 1.8 },
-  // 2024: Pivot whispers
-  { m2_g: 0.005, fed_g: -0.003, ecb_g: -0.002, boj_g: 0.003, pboc_g: 0.008, tga_d: 0.8, rrp_d: 0.6 },
-  // 2025: Re-expansion
-  { m2_g: 0.006, fed_g: 0.005, ecb_g: 0.003, boj_g: 0.004, pboc_g: 0.01, tga_d: 0.7, rrp_d: 0.3 },
-];
 
 // Interpolate between anchor points for smooth annual data
 function interpolate(a: AnnualSnapshot, b: AnnualSnapshot, year: number): AnnualSnapshot {
@@ -133,18 +130,15 @@ function interpolate(a: AnnualSnapshot, b: AnnualSnapshot, year: number): Annual
 
 function generateData(): LiquidityDataPoint[] {
   const data: LiquidityDataPoint[] = [];
-  const months = [
-    "Ene", "Feb", "Mar", "Abr", "May", "Jun",
-    "Jul", "Ago", "Sep", "Oct", "Nov", "Dic",
-  ];
 
   // Base for index: 1913 values
   const base1913 = historicalAnchors[0];
   const baseM2 = base1913.m2_us + base1913.m2_eu + base1913.m2_japan + base1913.m2_china;
   const baseCB = base1913.fed_bs + base1913.ecb_bs + base1913.boj_bs + base1913.pboc_bs;
 
-  // PART 1: Annual data points 1913-2014 (interpolated from anchors)
-  for (let year = 1913; year <= 2014; year++) {
+  const lastYear = historicalAnchors[historicalAnchors.length - 1].year;
+
+  for (let year = 1913; year <= lastYear; year++) {
     // Find surrounding anchors
     let aIdx = 0;
     for (let i = 0; i < historicalAnchors.length - 1; i++) {
@@ -181,77 +175,10 @@ function generateData(): LiquidityDataPoint[] {
     });
   }
 
-  // PART 2: Monthly data 2015-2025 (simulation with phase-based growth)
-  // Start from 2014 end values (last anchor)
-  const lastAnchor = historicalAnchors[historicalAnchors.length - 1];
-  let m2_us = lastAnchor.m2_us;
-  let m2_eu = lastAnchor.m2_eu;
-  let m2_japan = lastAnchor.m2_japan;
-  let m2_china = lastAnchor.m2_china;
-  let fed_bs = lastAnchor.fed_bs;
-  let ecb_bs = lastAnchor.ecb_bs;
-  let boj_bs = lastAnchor.boj_bs;
-  let pboc_bs = lastAnchor.pboc_bs;
-  let tga = lastAnchor.tga;
-  let rrp = lastAnchor.rrp;
-
-  // Use seeded random for deterministic output
-  let seed = 42;
-  const seededRandom = () => {
-    seed = (seed * 16807) % 2147483647;
-    return (seed - 1) / 2147483646;
-  };
-
-  for (let yearIdx = 0; yearIdx < 11; yearIdx++) {
-    const phase = monthlyPhases[yearIdx];
-    for (let month = 0; month < 12; month++) {
-      const noise = () => (seededRandom() - 0.5) * 0.003;
-
-      m2_us *= 1 + phase.m2_g + noise();
-      m2_eu *= 1 + phase.m2_g * 0.8 + noise();
-      m2_japan *= 1 + phase.m2_g * 0.5 + noise();
-      m2_china *= 1 + phase.m2_g * 1.2 + noise();
-
-      fed_bs *= 1 + phase.fed_g + noise();
-      ecb_bs *= 1 + phase.ecb_g + noise();
-      boj_bs *= 1 + phase.boj_g + noise();
-      pboc_bs *= 1 + phase.pboc_g + noise();
-
-      tga = phase.tga_d + (seededRandom() - 0.5) * 0.3;
-      rrp = Math.max(0, phase.rrp_d + (seededRandom() - 0.5) * 0.4);
-
-      const m2_global = m2_us + m2_eu + m2_japan + m2_china;
-      const cb_total = fed_bs + ecb_bs + boj_bs + pboc_bs;
-      const net_liq = fed_bs - tga - rrp;
-      const denominator_index = ((m2_global / baseM2) * 0.6 + (cb_total / baseCB) * 0.4) * 100;
-
-      data.push({
-        date: `${months[month]} ${2015 + yearIdx}`,
-        m2_us: +m2_us.toFixed(2),
-        m2_eu: +m2_eu.toFixed(2),
-        m2_japan: +m2_japan.toFixed(2),
-        m2_china: +m2_china.toFixed(2),
-        m2_global: +m2_global.toFixed(2),
-        fed_bs: +fed_bs.toFixed(2),
-        ecb_bs: +ecb_bs.toFixed(2),
-        boj_bs: +boj_bs.toFixed(2),
-        pboc_bs: +pboc_bs.toFixed(2),
-        cb_total: +cb_total.toFixed(2),
-        tga: +tga.toFixed(2),
-        rrp: +rrp.toFixed(2),
-        net_liquidity: +net_liq.toFixed(2),
-        denominator_index: +denominator_index.toFixed(1),
-      });
-    }
-  }
-
   return data;
 }
 
 export const liquidityData = generateData();
-
-// Index where monthly data starts (2015)
-export const MONTHLY_DATA_START = 102; // 1913-2014 = 102 annual points
 
 // CAGR: Compound Annual Growth Rate
 // (final/initial)^(1/years) - 1
