@@ -457,9 +457,6 @@ export default function Dashboard() {
                   tick={{ fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
-                  scale={logScale ? "log" : "auto"}
-                  domain={logScale ? ["auto", "auto"] : [0, "auto"]}
-                  allowDataOverflow={logScale}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Area
