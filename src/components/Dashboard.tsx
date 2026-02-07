@@ -670,6 +670,9 @@ export default function Dashboard() {
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={(v: number) => `$${v}T`}
+                  scale={logScale ? "log" : "auto"}
+                  domain={logScale ? ["auto", "auto"] : [0, "auto"]}
+                  allowDataOverflow={logScale}
                 />
                 <Tooltip
                   content={({ active, payload, label }: any) => {
