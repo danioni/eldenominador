@@ -194,16 +194,18 @@ export default function Dashboard() {
           Los precios no suben.
           <br />
           <span className="glow-green" style={{ color: "var(--accent-green)" }}>
-            La unidad se achica.
+            El dinero se encoge.
           </span>
         </p>
         <p
           className="mt-4 text-sm max-w-2xl leading-relaxed"
           style={{ color: "var(--text-secondary)" }}
         >
-          Cada precio que ves es una fracción. El numerador es el activo.
-          El denominador es la cantidad de unidades monetarias en circulación.
-          Cuando el denominador crece, el número sube — pero el valor real no cambia.
+          Todo precio es una fracción. Arriba está lo que comprás — el activo.
+          Abajo está la cantidad de dinero que existe en el mundo — el denominador.
+          Cada vez que los bancos centrales imprimen más dinero, el denominador crece
+          y todo parece más caro. Pero lo que cambió no fue el valor de las cosas,
+          sino el tamaño de la unidad con la que las medís.
         </p>
         <div className="divider-gradient mt-8" />
       </div>
