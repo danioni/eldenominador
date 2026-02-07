@@ -565,7 +565,32 @@ export default function Dashboard() {
                   tickLine={false}
                   domain={[0.8, 2.4]}
                 />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip
+                  content={({ active, payload, label }: any) => {
+                    if (!active || !payload) return null;
+                    return (
+                      <div
+                        className="rounded-lg px-4 py-3 text-xs"
+                        style={{
+                          background: "var(--bg-tooltip)",
+                          border: "1px solid var(--border)",
+                          backdropFilter: "blur(10px)",
+                        }}
+                      >
+                        <p className="mb-2 font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
+                        {payload.map((entry: any, i: number) => (
+                          <div key={i} className="flex items-center gap-2 py-0.5">
+                            <div className="w-2 h-2 rounded-full" style={{ background: entry.color }} />
+                            <span style={{ color: "var(--text-muted)" }}>{entry.name}:</span>
+                            <span className="font-medium tabular-nums" style={{ color: entry.color }}>
+                              {entry.value.toFixed(2)}x
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }}
+                />
                 <Area
                   type="monotone"
                   dataKey="m2v"
