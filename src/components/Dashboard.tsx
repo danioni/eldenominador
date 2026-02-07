@@ -201,11 +201,12 @@ export default function Dashboard() {
           className="mt-4 text-sm max-w-2xl leading-relaxed"
           style={{ color: "var(--text-secondary)" }}
         >
-          Todo precio es una fracción. Arriba está lo que compras — el activo.
-          Abajo está la cantidad de dinero que existe en el mundo — el denominador.
-          Cada vez que los bancos centrales imprimen más dinero, el denominador crece
-          y todo parece más caro. Pero lo que cambió no fue el valor de las cosas,
-          sino el tamaño de la unidad con la que las mides.
+          Todo precio es una fracción. El denominador es la masa monetaria
+          — la cantidad total de dinero en circulación. Cuando los bancos
+          centrales imprimen más, el denominador crece, cada unidad vale menos,
+          y los precios suben. Pero lo que cambió no fue el valor de las cosas,
+          sino el tamaño de la unidad con la que se miden. Quienes entienden
+          esto lo explotan. Quienes no, lo padecen.
         </p>
         <div className="divider-gradient mt-8" />
       </div>
