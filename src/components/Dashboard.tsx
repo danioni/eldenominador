@@ -252,8 +252,8 @@ export default function Dashboard() {
 
       {/* Denominator Index - hero chart */}
       <ChartSection
-        title="Tu dinero pierde valor cada día"
-        subtitle="Índice Denominador — compuesto ponderado: 60 % M2 Global + 40 % Balance Bancos Centrales · Base 100 = 1913"
+        title="Índice Denominador — Tu dinero pierde valor cada día"
+        subtitle="Compuesto ponderado: 60 % M2 Global + 40 % Balance Bancos Centrales · Base 100 = 1913"
         delay={3}
       >
         <div className="h-[320px]">
@@ -303,8 +303,8 @@ export default function Dashboard() {
       <div className="grid lg:grid-cols-2 gap-5 mt-6">
         {/* M2 Global */}
         <ChartSection
-          title="La impresora no para"
-          subtitle="M2 — Oferta monetaria por región en trillones USD"
+          title="Oferta Monetaria M2 — La impresora no para"
+          subtitle="Agregado monetario M2 por región (trillones USD)"
           delay={4}
         >
           <div className="h-[300px]">
@@ -367,7 +367,7 @@ export default function Dashboard() {
 
         {/* Central Bank Balance Sheets */}
         <ChartSection
-          title="Los bancos centrales compran todo"
+          title="Balance Bancos Centrales — Los bancos centrales compran todo"
           subtitle="Hojas de balance de los 4 principales bancos centrales (trillones USD)"
           delay={5}
         >
@@ -433,7 +433,7 @@ export default function Dashboard() {
       {/* Net Liquidity - full width */}
       <div className="mt-6">
         <ChartSection
-          title="La liquidez real que mueve los mercados"
+          title="Liquidez Neta Fed — La liquidez real que mueve los mercados"
           subtitle="Fed Balance Sheet − TGA − RRP = Liquidez neta disponible en el sistema (trillones USD)"
           delay={4}
         >
@@ -505,7 +505,7 @@ export default function Dashboard() {
       {/* Assets vs Denominator Index */}
       <div className="mt-6">
         <ChartSection
-          title="Nada le gana a la impresora"
+          title="Activos vs Denominador — Nada le gana a la impresora"
           subtitle="Todos indexados a base 100 en 1913. El S&P 500 subió ~750x, el oro ~138x, pero el denominador ~3.400x. Las acciones capturan mejor la expansión, pero ninguna la alcanza."
           delay={5}
         >
@@ -631,7 +631,7 @@ export default function Dashboard() {
       {/* Wealth Market Cap — Absolute */}
       <div className="mt-6">
         <ChartSection
-          title="Todo sube, pero no por las razones que crees"
+          title="Riqueza Global — Todo sube, pero no por las razones que crees"
           subtitle="Market cap total por clase de activo en USD nominales. De $1T en 1913 a $721T en 2025 — el denominador en acción."
           delay={5}
         >
@@ -783,7 +783,7 @@ export default function Dashboard() {
       {/* Wealth Distribution — Percentage */}
       <div className="mt-6">
         <ChartSection
-          title="El denominador se expande — ¿quién absorbe?"
+          title="Distribución de Riqueza — El denominador se expande, ¿quién absorbe?"
           subtitle="Distribución del market cap global por clase de activo. Cada dólar nuevo tiene que ir a algún lado."
           delay={5}
         >
@@ -926,7 +926,7 @@ export default function Dashboard() {
       {/* M2 Global Aggregate */}
       <div className="mt-6">
         <ChartSection
-          title="El denominador en una sola línea"
+          title="M2 Global — El denominador en una sola línea"
           subtitle="Suma total de oferta monetaria M2 de las principales economías (trillones USD)"
           delay={5}
         >
