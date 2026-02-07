@@ -186,7 +186,6 @@ function ScaleToggle({ isLog, onToggle }: { isLog: boolean; onToggle: () => void
 export default function Dashboard() {
   const [range, setRange] = useState<TimeRange>("ALL");
   const [logScale, setLogScale] = useState(false);
-  const [realWealth, setRealWealth] = useState(false);
   const COLORS = useThemeColors();
   const metrics = useMemo(() => getLatestMetrics(), []);
 
@@ -196,22 +195,6 @@ export default function Dashboard() {
     if (range === "50Y") return liquidityData.slice(-50);
     return liquidityData; // ALL: 1913-2025
   }, [range]);
-
-  // Real wealth: nominal market cap deflated by the denominator index
-  const wealthData = useMemo(() => {
-    if (!realWealth) return filteredData;
-    return filteredData.map((d: any) => {
-      const deflator = d.denominator_index / 100;
-      return {
-        ...d,
-        gold_mcap: +(d.gold_mcap / deflator).toFixed(2),
-        equities_mcap: +(d.equities_mcap / deflator).toFixed(2),
-        realestate_mcap: +(d.realestate_mcap / deflator).toFixed(2),
-        bonds_mcap: +(d.bonds_mcap / deflator).toFixed(2),
-        bitcoin_mcap: +(d.bitcoin_mcap / deflator).toFixed(4),
-      };
-    });
-  }, [filteredData, realWealth]);
 
   // Build custom ticks for clean X axis labels
   const xTicks = useMemo(() => {
@@ -726,32 +709,13 @@ export default function Dashboard() {
       {/* Wealth Market Cap — Absolute */}
       <div className="mt-6">
         <ChartSection
-          title={realWealth
-            ? "Riqueza Global Real — Ajustada por el denominador, la ilusión desaparece"
-            : "Riqueza Global — Todo sube, pero no por las razones que crees"
-          }
-          subtitle={realWealth
-            ? "Market cap deflactado por el Índice Denominador. La riqueza real apenas creció — lo que subió fue el denominador."
-            : "Market cap total por clase de activo en USD nominales. De $1T en 1913 a $721T en 2025 — el denominador en acción."
-          }
+          title="Riqueza Global — Más activos, más unidades, más denominador"
+          subtitle="Market cap total por clase de activo en USD nominales. El crecimiento refleja tanto riqueza real (más casas, empresas, deuda) como dilución monetaria. Para ver cuánto es cada cosa, mirá los precios unitarios en Activos vs Denominador."
           delay={5}
         >
-          <div className="flex justify-end mb-3">
-            <button
-              onClick={() => setRealWealth(!realWealth)}
-              className="px-3.5 py-1.5 rounded-md text-[10px] tracking-wider uppercase transition-all"
-              style={{
-                background: realWealth ? "var(--accent-green-bg-active)" : "var(--controls-bg)",
-                color: realWealth ? "var(--accent-green)" : "var(--text-muted)",
-                border: `1px solid ${realWealth ? "var(--accent-green-border-active)" : "var(--border-subtle)"}`,
-              }}
-            >
-              {realWealth ? "Real (ajustado)" : "Nominal"}
-            </button>
-          </div>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={wealthData}>
+              <AreaChart data={filteredData}>
                 <defs>
                   <linearGradient id="gradGoldAbs" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor={COLORS.amber} stopOpacity={0.5} />
@@ -793,7 +757,7 @@ export default function Dashboard() {
                 <Tooltip
                   content={({ active, payload, label }: any) => {
                     if (!active || !payload) return null;
-                    const point = wealthData.find((d: any) => d.date === label);
+                    const point = filteredData.find((d: any) => d.date === label);
                     if (!point) return null;
                     const total = point.realestate_mcap + point.bonds_mcap + point.equities_mcap + point.gold_mcap + point.bitcoin_mcap;
                     const items = [
