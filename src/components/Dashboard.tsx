@@ -501,20 +501,24 @@ export default function Dashboard() {
         </ChartSection>
       </div>
 
-      {/* Gold vs Denominator */}
+      {/* Gold Index vs Denominator Index */}
       <div className="mt-6">
         <ChartSection
-          title="Oro — Nominal vs Real"
-          subtitle="Precio del oro en USD y ajustado por el Índice Denominador. Si el oro solo sube porque el dinero se encoge, la línea real se mantiene plana."
+          title="Oro vs Denominador"
+          subtitle="Ambos indexados a base 100 en 1913. El oro subió ~138x. El denominador subió ~3.400x. La brecha es dinero impreso."
           delay={5}
         >
           <div className="h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={filteredData}>
                 <defs>
-                  <linearGradient id="gradGold" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="gradGoldIdx" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor={COLORS.amber} stopOpacity={0.2} />
                     <stop offset="100%" stopColor={COLORS.amber} stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="gradDenomIdx" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.green} stopOpacity={0.1} />
+                    <stop offset="100%" stopColor={COLORS.green} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
@@ -527,7 +531,6 @@ export default function Dashboard() {
                   tickLine={false}
                 />
                 <YAxis
-                  yAxisId="nominal"
                   stroke="var(--text-muted)"
                   tick={{ fontSize: 10 }}
                   axisLine={false}
@@ -535,20 +538,13 @@ export default function Dashboard() {
                   scale={logScale ? "log" : "auto"}
                   domain={logScale ? ["auto", "auto"] : [0, "auto"]}
                   allowDataOverflow={logScale}
-                  tickFormatter={(v: number) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}K` : v}`}
-                />
-                <YAxis
-                  yAxisId="real"
-                  orientation="right"
-                  stroke={COLORS.muted}
-                  tick={{ fontSize: 10 }}
-                  axisLine={false}
-                  tickLine={false}
-                  domain={[0, "auto"]}
+                  tickFormatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(0)}K` : `${v}`}
                 />
                 <Tooltip
                   content={({ active, payload, label }: any) => {
                     if (!active || !payload) return null;
+                    // Find gold_usd for this year
+                    const point = filteredData.find((d: any) => d.date === label);
                     return (
                       <div
                         className="rounded-lg px-4 py-3 text-xs"
@@ -559,12 +555,21 @@ export default function Dashboard() {
                         }}
                       >
                         <p className="mb-2 font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
+                        {point && (
+                          <div className="flex items-center gap-2 py-0.5 mb-1">
+                            <div className="w-2 h-2 rounded-full" style={{ background: COLORS.amber }} />
+                            <span style={{ color: "var(--text-muted)" }}>Oro:</span>
+                            <span className="font-medium tabular-nums" style={{ color: COLORS.amber }}>
+                              ${point.gold_usd.toLocaleString()}/oz
+                            </span>
+                          </div>
+                        )}
                         {payload.map((entry: any, i: number) => (
                           <div key={i} className="flex items-center gap-2 py-0.5">
                             <div className="w-2 h-2 rounded-full" style={{ background: entry.color }} />
                             <span style={{ color: "var(--text-muted)" }}>{entry.name}:</span>
                             <span className="font-medium tabular-nums" style={{ color: entry.color }}>
-                              {entry.dataKey === "gold_usd" ? `$${entry.value.toLocaleString()}` : entry.value.toFixed(2)}
+                              {entry.value >= 1000 ? `${(entry.value / 1000).toFixed(1)}K` : entry.value.toFixed(0)}
                             </span>
                           </div>
                         ))}
@@ -573,30 +578,28 @@ export default function Dashboard() {
                   }}
                 />
                 <Area
-                  yAxisId="nominal"
                   type="monotone"
-                  dataKey="gold_usd"
-                  name="Oro (USD)"
-                  stroke={COLORS.amber}
-                  fill="url(#gradGold)"
+                  dataKey="denominator_index"
+                  name="Denominador"
+                  stroke={COLORS.green}
+                  fill="url(#gradDenomIdx)"
                   strokeWidth={2}
                 />
-                <Line
-                  yAxisId="real"
+                <Area
                   type="monotone"
-                  dataKey="gold_real"
-                  name="Oro Real (ajustado)"
-                  stroke={COLORS.cyan}
+                  dataKey="gold_index"
+                  name="Oro"
+                  stroke={COLORS.amber}
+                  fill="url(#gradGoldIdx)"
                   strokeWidth={2}
-                  dot={false}
                 />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
           <ChartLegend
             items={[
-              { color: COLORS.amber, label: "Oro (USD nominal)" },
-              { color: COLORS.cyan, label: "Oro Real (ajustado por denominador)" },
+              { color: COLORS.green, label: "Denominador (base 100)" },
+              { color: COLORS.amber, label: "Oro (base 100)" },
             ]}
           />
         </ChartSection>

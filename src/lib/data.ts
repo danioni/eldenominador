@@ -19,7 +19,7 @@ export interface LiquidityDataPoint {
   net_liquidity: number;
   denominator_index: number;
   gold_usd: number;
-  gold_real: number; // gold / denominator_index — poder adquisitivo real del oro
+  gold_index: number; // gold indexed to base 100 = 1913 ($20.67/oz)
 }
 
 // Annual data points for major monetary eras (1913-2014)
@@ -139,6 +139,7 @@ function generateData(): LiquidityDataPoint[] {
   const base1913 = historicalAnchors[0];
   const baseM2 = base1913.m2_us + base1913.m2_eu + base1913.m2_japan + base1913.m2_china;
   const baseCB = base1913.fed_bs + base1913.ecb_bs + base1913.boj_bs + base1913.pboc_bs;
+  const baseGold = base1913.gold_usd; // $20.67 in 1913
 
   const lastYear = historicalAnchors[historicalAnchors.length - 1].year;
 
@@ -177,7 +178,7 @@ function generateData(): LiquidityDataPoint[] {
       net_liquidity: +net_liq.toFixed(3),
       denominator_index: +denominator_index.toFixed(1),
       gold_usd: +snap.gold_usd.toFixed(0),
-      gold_real: +(snap.gold_usd / (denominator_index / 100)).toFixed(2),
+      gold_index: +((snap.gold_usd / baseGold) * 100).toFixed(1),
     });
   }
 
