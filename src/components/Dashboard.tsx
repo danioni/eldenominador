@@ -537,7 +537,7 @@ export default function Dashboard() {
       <div className="mt-6">
         <ChartSection
           title="Velocidad del Dinero — Imprimen más, circula menos"
-          subtitle="M2 Velocity (GDP / M2) — proxy EE.UU. vía FRED. Cada dólar nuevo se queda atrapado en el sistema financiero en vez de llegar a la economía real."
+          subtitle="Velocidad M2 (PIB / M2) — estimación vía FRED. Cada dólar nuevo se queda atrapado en el sistema financiero en vez de llegar a la economía real."
           delay={4}
         >
           <div className="h-[280px]">
@@ -710,7 +710,7 @@ export default function Dashboard() {
       <div className="mt-6">
         <ChartSection
           title="Riqueza Global — Más activos, más unidades, más denominador"
-          subtitle="Market cap total por clase de activo en USD nominales. El crecimiento refleja tanto riqueza real (más casas, empresas, deuda) como dilución monetaria. Para ver cuánto es cada cosa, mirá los precios unitarios en Activos vs Denominador."
+          subtitle="Capitalización total por clase de activo en USD nominales. El crecimiento refleja tanto riqueza real (más casas, empresas, deuda) como dilución monetaria. Para ver cuánto es cada cosa, mirá los precios unitarios en Activos vs Denominador."
           delay={5}
         >
           <div className="h-[300px]">
@@ -862,7 +862,7 @@ export default function Dashboard() {
       <div className="mt-6">
         <ChartSection
           title="Distribución de Riqueza — El denominador se expande, ¿quién absorbe más?"
-          subtitle="Distribución del market cap global por clase de activo. Cada dólar nuevo tiene que ir a algún lado."
+          subtitle="Distribución de la capitalización global por clase de activo. Cada dólar nuevo tiene que ir a algún lado."
           delay={5}
         >
           <div className="h-[300px]">
