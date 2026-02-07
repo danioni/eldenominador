@@ -249,7 +249,7 @@ export default function Dashboard() {
       </div>
 
       {/* Metrics row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+      <div className="grid grid-cols-3 gap-5 mb-10">
         <MetricCard
           label={metrics.m2Global.label}
           value={metrics.m2Global.value}
@@ -265,24 +265,17 @@ export default function Dashboard() {
           delay={2}
         />
         <MetricCard
-          label={metrics.netLiquidity.label}
-          value={metrics.netLiquidity.value}
-          change={metrics.netLiquidity.change}
-          unit={metrics.netLiquidity.unit}
-          delay={3}
-        />
-        <MetricCard
           label={metrics.denominatorIndex.label}
           value={metrics.denominatorIndex.value}
           change={metrics.denominatorIndex.change}
           unit={metrics.denominatorIndex.unit}
-          delay={4}
+          delay={3}
         />
       </div>
 
       {/* Denominator Index - hero chart */}
       <ChartSection
-        title="Índice Denominador — Tu dinero pierde valor cada día"
+        title="Índice Denominador — El dinero con el que mides tu vida pierde valor cada día"
         subtitle="Compuesto ponderado: 60 % M2 Global + 40 % Balance Bancos Centrales · Base 100 = 1913"
         delay={3}
       >
@@ -962,7 +955,7 @@ export default function Dashboard() {
               </p>
               <ul className="space-y-1">
                 <li>
-                  <a href="https://fred.stlouisfed.org/series/M2SL" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>FRED</a> — M2 Estados Unidos, Balance de la Fed, TGA, Reverse Repo
+                  <a href="https://fred.stlouisfed.org/series/M2SL" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>FRED</a> — M2 Estados Unidos, Balance de la Fed
                 </li>
                 <li>
                   <a href="https://www.ecb.europa.eu/stats/money_credit_banking/monetary_aggregates/html/index.en.html" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>BCE</a> — M2 Eurozona, Balance del BCE
