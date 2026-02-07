@@ -10,19 +10,31 @@ interface ChartSectionProps {
 }
 
 export default function ChartSection({ title, subtitle, children, delay = 0 }: ChartSectionProps) {
+  const parts = title.split(" — ");
+  const heading = parts[0];
+  const tagline = parts.length > 1 ? parts.slice(1).join(" — ") : null;
+
   return (
     <div className={`card-glass card-accent-left rounded-xl p-6 md:p-8 fade-in-up fade-in-up-${delay}`}>
       <div className="mb-5">
-        <div className="flex items-center gap-3 mb-1.5">
-          <h2
-            className="font-serif text-lg"
+        <h2 className="mb-2">
+          <span
+            className="font-serif text-lg tracking-wide"
             style={{ color: "var(--text-primary)" }}
           >
-            {title}
-          </h2>
-        </div>
+            {heading}
+          </span>
+          {tagline && (
+            <span
+              className="font-serif italic text-base ml-2"
+              style={{ color: "var(--text-secondary)", opacity: 0.7 }}
+            >
+              — {tagline}
+            </span>
+          )}
+        </h2>
         <p
-          className="text-[11px] leading-relaxed"
+          className="text-[11px] leading-relaxed max-w-2xl"
           style={{ color: "var(--text-muted)" }}
         >
           {subtitle}

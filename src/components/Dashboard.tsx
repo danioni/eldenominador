@@ -590,7 +590,7 @@ export default function Dashboard() {
       <div className="mt-6">
         <ChartSection
           title="Riqueza Global — Más activos, más unidades, más denominador"
-          subtitle="Capitalización total por clase de activo en USD nominales. El crecimiento refleja tanto riqueza real (más casas, empresas, deuda) como dilución monetaria. Para ver cuánto es cada cosa, mirá los precios unitarios en Activos vs Denominador."
+          subtitle="Capitalización total por clase de activo en USD nominales. El crecimiento refleja tanto riqueza real (más casas, empresas, deuda) como dilución monetaria. Para ver cuánto es cada cosa, ver precios unitarios en Activos vs Denominador."
           delay={5}
         >
           <div className="h-[300px]">
