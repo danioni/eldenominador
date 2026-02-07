@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   AreaChart,
   Area,
@@ -18,17 +18,47 @@ import ChartSection from "./ChartSection";
 
 type TimeRange = "10Y" | "25Y" | "50Y" | "ALL";
 
-const COLORS = {
-  green: "#00ff88",
-  greenDim: "#00cc6a",
-  blue: "#3388ff",
-  purple: "#aa55ff",
-  amber: "#ffaa00",
-  red: "#ff3355",
-  cyan: "#00ddff",
-  orange: "#ff8800",
-  muted: "#55556a",
+const DEFAULT_COLORS = {
+  green: "#00ff88", greenDim: "#00cc6a", blue: "#3388ff",
+  purple: "#aa55ff", amber: "#ffaa00", red: "#ff3355",
+  cyan: "#00ddff", orange: "#ff8800", muted: "#55556a",
 };
+
+function useThemeColors() {
+  const getColors = useCallback(() => {
+    if (typeof window === "undefined") return DEFAULT_COLORS;
+    const s = getComputedStyle(document.documentElement);
+    const g = (v: string, fb: string) => s.getPropertyValue(v).trim() || fb;
+    return {
+      green: g("--accent-green", "#00ff88"),
+      greenDim: g("--accent-green-dim", "#00cc6a"),
+      blue: g("--accent-blue", "#3388ff"),
+      purple: g("--accent-purple", "#aa55ff"),
+      amber: g("--accent-amber", "#ffaa00"),
+      red: g("--accent-red", "#ff3355"),
+      cyan: g("--accent-cyan", "#00ddff"),
+      orange: "#ff8800",
+      muted: g("--text-muted", "#55556a"),
+    };
+  }, []);
+
+  const [colors, setColors] = useState(DEFAULT_COLORS);
+
+  useEffect(() => {
+    setColors(getColors());
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.attributeName === "data-theme") {
+          requestAnimationFrame(() => setColors(getColors()));
+        }
+      }
+    });
+    observer.observe(document.documentElement, { attributes: true });
+    return () => observer.disconnect();
+  }, [getColors]);
+
+  return colors;
+}
 
 function formatValue(v: number): string {
   if (v >= 1) return `$${v.toFixed(2)}T`;
@@ -42,7 +72,7 @@ function CustomTooltip({ active, payload, label }: any) {
     <div
       className="rounded-lg px-4 py-3 text-xs"
       style={{
-        background: "rgba(6,6,11,0.95)",
+        background: "var(--bg-tooltip)",
         border: "1px solid var(--border)",
         backdropFilter: "blur(10px)",
       }}
@@ -72,7 +102,7 @@ function DenominatorTooltip({ active, payload, label }: any) {
     <div
       className="rounded-lg px-4 py-3 text-xs"
       style={{
-        background: "rgba(6,6,11,0.95)",
+        background: "var(--bg-tooltip)",
         border: "1px solid var(--border)",
         backdropFilter: "blur(10px)",
       }}
@@ -105,7 +135,7 @@ function TimeRangeSelector({
 }) {
   const options: TimeRange[] = ["10Y", "25Y", "50Y", "ALL"];
   return (
-    <div className="flex gap-1 p-1 rounded-lg" style={{ background: "rgba(16, 16, 26, 0.6)", border: "1px solid var(--border-subtle)" }}>
+    <div className="flex gap-1 p-1 rounded-lg" style={{ background: "var(--controls-bg)", border: "1px solid var(--border-subtle)" }}>
       {options.map((opt) => (
         <button
           key={opt}
@@ -114,7 +144,7 @@ function TimeRangeSelector({
           style={{
             background:
               range === opt
-                ? "rgba(0,255,136,0.12)"
+                ? "var(--accent-green-bg-active)"
                 : "transparent",
             color:
               range === opt
@@ -122,11 +152,11 @@ function TimeRangeSelector({
                 : "var(--text-muted)",
             border:
               range === opt
-                ? "1px solid rgba(0,255,136,0.2)"
+                ? "1px solid var(--accent-green-border-active)"
                 : "1px solid transparent",
             boxShadow:
               range === opt
-                ? "0 0 12px rgba(0,255,136,0.06)"
+                ? "var(--accent-green-glow)"
                 : "none",
           }}
         >
@@ -143,9 +173,9 @@ function ScaleToggle({ isLog, onToggle }: { isLog: boolean; onToggle: () => void
       onClick={onToggle}
       className="px-3.5 py-1.5 rounded-md text-[10px] tracking-wider uppercase transition-all"
       style={{
-        background: isLog ? "rgba(0,255,136,0.12)" : "transparent",
+        background: isLog ? "var(--accent-green-bg-active)" : "transparent",
         color: isLog ? "var(--accent-green)" : "var(--text-muted)",
-        border: isLog ? "1px solid rgba(0,255,136,0.2)" : "1px solid var(--border-subtle)",
+        border: isLog ? "1px solid var(--accent-green-border-active)" : "1px solid var(--border-subtle)",
       }}
     >
       LOG
@@ -156,6 +186,7 @@ function ScaleToggle({ isLog, onToggle }: { isLog: boolean; onToggle: () => void
 export default function Dashboard() {
   const [range, setRange] = useState<TimeRange>("ALL");
   const [logScale, setLogScale] = useState(false);
+  const [realWealth, setRealWealth] = useState(false);
   const metrics = useMemo(() => getLatestMetrics(), []);
 
   const filteredData = useMemo(() => {
@@ -164,6 +195,22 @@ export default function Dashboard() {
     if (range === "50Y") return liquidityData.slice(-50);
     return liquidityData; // ALL: 1913-2025
   }, [range]);
+
+  // Real wealth: nominal market cap deflated by the denominator index
+  const wealthData = useMemo(() => {
+    if (!realWealth) return filteredData;
+    return filteredData.map((d: any) => {
+      const deflator = d.denominator_index / 100;
+      return {
+        ...d,
+        gold_mcap: +(d.gold_mcap / deflator).toFixed(2),
+        equities_mcap: +(d.equities_mcap / deflator).toFixed(2),
+        realestate_mcap: +(d.realestate_mcap / deflator).toFixed(2),
+        bonds_mcap: +(d.bonds_mcap / deflator).toFixed(2),
+        bitcoin_mcap: +(d.bitcoin_mcap / deflator).toFixed(4),
+      };
+    });
+  }, [filteredData, realWealth]);
 
   // Build custom ticks for clean X axis labels
   const xTicks = useMemo(() => {
@@ -502,6 +549,53 @@ export default function Dashboard() {
         </ChartSection>
       </div>
 
+      {/* M2 Velocity */}
+      <div className="mt-6">
+        <ChartSection
+          title="Velocidad del Dinero — Imprimen más, circula menos"
+          subtitle="M2 Velocity (GDP / M2) — proxy EE.UU. vía FRED. Cada dólar nuevo se queda atrapado en el sistema financiero en vez de llegar a la economía real."
+          delay={4}
+        >
+          <div className="h-[280px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={filteredData}>
+                <defs>
+                  <linearGradient id="gradM2V" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.red} stopOpacity={0.25} />
+                    <stop offset="100%" stopColor={COLORS.red} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
+                <XAxis
+                  dataKey="date"
+                  stroke="var(--text-muted)"
+                  tick={{ fontSize: 10 }}
+                  ticks={xTicks}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  stroke="var(--text-muted)"
+                  tick={{ fontSize: 10 }}
+                  axisLine={false}
+                  tickLine={false}
+                  domain={[0.8, 2.4]}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                <Area
+                  type="monotone"
+                  dataKey="m2v"
+                  name="Velocidad M2"
+                  stroke={COLORS.red}
+                  fill="url(#gradM2V)"
+                  strokeWidth={2}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </ChartSection>
+      </div>
+
       {/* Assets vs Denominator Index */}
       <div className="mt-6">
         <ChartSection
@@ -554,7 +648,7 @@ export default function Dashboard() {
                       <div
                         className="rounded-lg px-4 py-3 text-xs"
                         style={{
-                          background: "rgba(6,6,11,0.95)",
+                          background: "var(--bg-tooltip)",
                           border: "1px solid var(--border)",
                           backdropFilter: "blur(10px)",
                         }}
@@ -631,13 +725,32 @@ export default function Dashboard() {
       {/* Wealth Market Cap — Absolute */}
       <div className="mt-6">
         <ChartSection
-          title="Riqueza Global — Todo sube, pero no por las razones que crees"
-          subtitle="Market cap total por clase de activo en USD nominales. De $1T en 1913 a $721T en 2025 — el denominador en acción."
+          title={realWealth
+            ? "Riqueza Global Real — Ajustada por el denominador, la ilusión desaparece"
+            : "Riqueza Global — Todo sube, pero no por las razones que crees"
+          }
+          subtitle={realWealth
+            ? "Market cap deflactado por el Índice Denominador. La riqueza real apenas creció — lo que subió fue el denominador."
+            : "Market cap total por clase de activo en USD nominales. De $1T en 1913 a $721T en 2025 — el denominador en acción."
+          }
           delay={5}
         >
+          <div className="flex justify-end mb-3">
+            <button
+              onClick={() => setRealWealth(!realWealth)}
+              className="px-3.5 py-1.5 rounded-md text-[10px] tracking-wider uppercase transition-all"
+              style={{
+                background: realWealth ? "rgba(0, 255, 136, 0.12)" : "rgba(255, 255, 255, 0.04)",
+                color: realWealth ? "var(--accent-green)" : "var(--text-muted)",
+                border: `1px solid ${realWealth ? "rgba(0, 255, 136, 0.3)" : "var(--border-subtle)"}`,
+              }}
+            >
+              {realWealth ? "Real (ajustado)" : "Nominal"}
+            </button>
+          </div>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={filteredData}>
+              <AreaChart data={wealthData}>
                 <defs>
                   <linearGradient id="gradGoldAbs" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor={COLORS.amber} stopOpacity={0.5} />
@@ -679,7 +792,7 @@ export default function Dashboard() {
                 <Tooltip
                   content={({ active, payload, label }: any) => {
                     if (!active || !payload) return null;
-                    const point = filteredData.find((d: any) => d.date === label);
+                    const point = wealthData.find((d: any) => d.date === label);
                     if (!point) return null;
                     const total = point.realestate_mcap + point.bonds_mcap + point.equities_mcap + point.gold_mcap + point.bitcoin_mcap;
                     const items = [
@@ -693,7 +806,7 @@ export default function Dashboard() {
                       <div
                         className="rounded-lg px-4 py-3 text-xs"
                         style={{
-                          background: "rgba(6,6,11,0.95)",
+                          background: "var(--bg-tooltip)",
                           border: "1px solid var(--border)",
                           backdropFilter: "blur(10px)",
                         }}
@@ -783,7 +896,7 @@ export default function Dashboard() {
       {/* Wealth Distribution — Percentage */}
       <div className="mt-6">
         <ChartSection
-          title="Distribución de Riqueza — El denominador se expande, ¿quién absorbe?"
+          title="Distribución de Riqueza — El denominador se expande, ¿quién absorbe más?"
           subtitle="Distribución del market cap global por clase de activo. Cada dólar nuevo tiene que ir a algún lado."
           delay={5}
         >
@@ -844,7 +957,7 @@ export default function Dashboard() {
                       <div
                         className="rounded-lg px-4 py-3 text-xs"
                         style={{
-                          background: "rgba(6,6,11,0.95)",
+                          background: "var(--bg-tooltip)",
                           border: "1px solid var(--border)",
                           backdropFilter: "blur(10px)",
                         }}
@@ -971,6 +1084,22 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </div>
         </ChartSection>
+
+        {/* Closing message */}
+        <div className="mt-16 mb-16 fade-in-up text-center">
+          <div className="divider-gradient mb-8" />
+          <p
+            className="font-serif text-3xl md:text-4xl leading-tight tracking-tight"
+            style={{ color: "var(--text-primary)" }}
+          >
+            ¿Quién dijo que el dinero era{" "}
+            <span className="glow-green" style={{ color: "var(--accent-green)" }}>
+              escaso
+            </span>
+            ?
+          </p>
+          <div className="divider-gradient mt-8" />
+        </div>
 
         {/* Sources */}
         <div className="mt-16 fade-in-up">
