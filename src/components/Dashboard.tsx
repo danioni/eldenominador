@@ -26,6 +26,7 @@ const COLORS = {
   amber: "#ffaa00",
   red: "#ff3355",
   cyan: "#00ddff",
+  orange: "#ff8800",
   muted: "#55556a",
 };
 
@@ -654,6 +655,10 @@ export default function Dashboard() {
                     <stop offset="0%" stopColor={COLORS.cyan} stopOpacity={0.4} />
                     <stop offset="100%" stopColor={COLORS.cyan} stopOpacity={0.05} />
                   </linearGradient>
+                  <linearGradient id="gradBTCAbs" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.orange} stopOpacity={0.6} />
+                    <stop offset="100%" stopColor={COLORS.orange} stopOpacity={0.05} />
+                  </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
                 <XAxis
@@ -670,21 +675,19 @@ export default function Dashboard() {
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={(v: number) => `$${v}T`}
-                  scale={logScale ? "log" : "auto"}
-                  domain={logScale ? ["auto", "auto"] : [0, "auto"]}
-                  allowDataOverflow={logScale}
                 />
                 <Tooltip
                   content={({ active, payload, label }: any) => {
                     if (!active || !payload) return null;
                     const point = filteredData.find((d: any) => d.date === label);
                     if (!point) return null;
-                    const total = point.realestate_mcap + point.bonds_mcap + point.equities_mcap + point.gold_mcap;
+                    const total = point.realestate_mcap + point.bonds_mcap + point.equities_mcap + point.gold_mcap + point.bitcoin_mcap;
                     const items = [
                       { label: "Inmuebles", value: point.realestate_mcap, color: COLORS.purple },
                       { label: "Bonos", value: point.bonds_mcap, color: COLORS.cyan },
                       { label: "Acciones", value: point.equities_mcap, color: COLORS.blue },
                       { label: "Oro", value: point.gold_mcap, color: COLORS.amber },
+                      ...(point.bitcoin_mcap > 0.001 ? [{ label: "Bitcoin", value: point.bitcoin_mcap, color: COLORS.orange }] : []),
                     ];
                     return (
                       <div
@@ -753,6 +756,15 @@ export default function Dashboard() {
                   fill="url(#gradGoldAbs)"
                   strokeWidth={1.5}
                 />
+                <Area
+                  type="monotone"
+                  dataKey="bitcoin_mcap"
+                  name="Bitcoin"
+                  stackId="1"
+                  stroke={COLORS.orange}
+                  fill="url(#gradBTCAbs)"
+                  strokeWidth={1.5}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -762,6 +774,7 @@ export default function Dashboard() {
               { color: COLORS.cyan, label: "Bonos" },
               { color: COLORS.blue, label: "Acciones" },
               { color: COLORS.amber, label: "Oro" },
+              { color: COLORS.orange, label: "Bitcoin" },
             ]}
           />
         </ChartSection>
@@ -794,6 +807,10 @@ export default function Dashboard() {
                     <stop offset="0%" stopColor={COLORS.cyan} stopOpacity={0.4} />
                     <stop offset="100%" stopColor={COLORS.cyan} stopOpacity={0.1} />
                   </linearGradient>
+                  <linearGradient id="gradBTC" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.orange} stopOpacity={0.6} />
+                    <stop offset="100%" stopColor={COLORS.orange} stopOpacity={0.1} />
+                  </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
                 <XAxis
@@ -821,6 +838,7 @@ export default function Dashboard() {
                       { label: "Bonos", value: point.bonds_wealth_pct, color: COLORS.cyan },
                       { label: "Acciones", value: point.equities_wealth_pct, color: COLORS.blue },
                       { label: "Oro", value: point.gold_wealth_pct, color: COLORS.amber },
+                      ...(point.bitcoin_wealth_pct > 0.01 ? [{ label: "Bitcoin", value: point.bitcoin_wealth_pct, color: COLORS.orange }] : []),
                     ];
                     return (
                       <div
@@ -881,6 +899,15 @@ export default function Dashboard() {
                   fill="url(#gradGold)"
                   strokeWidth={1.5}
                 />
+                <Area
+                  type="monotone"
+                  dataKey="bitcoin_wealth_pct"
+                  name="Bitcoin"
+                  stackId="1"
+                  stroke={COLORS.orange}
+                  fill="url(#gradBTC)"
+                  strokeWidth={1.5}
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -890,6 +917,7 @@ export default function Dashboard() {
               { color: COLORS.cyan, label: "Bonos" },
               { color: COLORS.blue, label: "Acciones" },
               { color: COLORS.amber, label: "Oro" },
+              { color: COLORS.orange, label: "Bitcoin" },
             ]}
           />
         </ChartSection>

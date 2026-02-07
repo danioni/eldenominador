@@ -29,12 +29,14 @@ export interface LiquidityDataPoint {
   equities_mcap: number; // global equities market cap in trillions USD
   realestate_mcap: number; // global real estate market cap in trillions USD
   bonds_mcap: number; // global bonds market cap in trillions USD
+  bitcoin_mcap: number; // bitcoin market cap in trillions USD
   gold_capture_pct: number; // % of denominator growth captured by gold (legacy)
   gold_gap_pct: number; // % not captured (goes to other assets) — legacy
   gold_wealth_pct: number; // % of total wealth in gold (market cap based)
   equities_wealth_pct: number; // % of total wealth in equities
   realestate_wealth_pct: number; // % of total wealth in real estate
   bonds_wealth_pct: number; // % of total wealth in bonds
+  bitcoin_wealth_pct: number; // % of total wealth in bitcoin
   sp500_capture_pct: number; // alias for equities_wealth_pct
   realestate_capture_pct: number; // alias for realestate_wealth_pct
   bonds_capture_pct: number; // alias for bonds_wealth_pct
@@ -63,6 +65,7 @@ interface AnnualSnapshot {
   equities_mcap: number; // global equities market cap in trillions USD
   realestate_mcap: number; // global real estate value in trillions USD
   bonds_mcap: number; // global bond market in trillions USD
+  bitcoin_mcap: number; // bitcoin market cap in trillions USD
 }
 
 // Key historical snapshots — values in trillions USD
@@ -70,69 +73,69 @@ interface AnnualSnapshot {
 const historicalAnchors: AnnualSnapshot[] = [
   // 1913: Fed created, gold standard — gold fixed at $20.67/oz
   // Market cap sources: WGC (gold), World Bank/Siblis (equities), Savills (RE), BIS/SIFMA (bonds)
-  { year: 1913, m2_us: 0.020, m2_eu: 0.025, m2_japan: 0.003, m2_china: 0.002, fed_bs: 0.001, ecb_bs: 0.002, boj_bs: 0.001, pboc_bs: 0.001, tga: 0.001, rrp: 0, gold_usd: 20.67, sp500: 8.04, gold_mcap: 0.04, equities_mcap: 0.001, realestate_mcap: 0.9, bonds_mcap: 0.03 },
+  { year: 1913, m2_us: 0.020, m2_eu: 0.025, m2_japan: 0.003, m2_china: 0.002, fed_bs: 0.001, ecb_bs: 0.002, boj_bs: 0.001, pboc_bs: 0.001, tga: 0.001, rrp: 0, gold_usd: 20.67, sp500: 8.04, gold_mcap: 0.04, equities_mcap: 0.001, realestate_mcap: 0.9, bonds_mcap: 0.03, bitcoin_mcap: 0 },
   // 1918: WWI expansion
-  { year: 1918, m2_us: 0.035, m2_eu: 0.045, m2_japan: 0.006, m2_china: 0.003, fed_bs: 0.005, ecb_bs: 0.008, boj_bs: 0.002, pboc_bs: 0.001, tga: 0.002, rrp: 0, gold_usd: 20.67, sp500: 7.90, gold_mcap: 0.04, equities_mcap: 0.003, realestate_mcap: 1.2, bonds_mcap: 0.06 },
+  { year: 1918, m2_us: 0.035, m2_eu: 0.045, m2_japan: 0.006, m2_china: 0.003, fed_bs: 0.005, ecb_bs: 0.008, boj_bs: 0.002, pboc_bs: 0.001, tga: 0.002, rrp: 0, gold_usd: 20.67, sp500: 7.90, gold_mcap: 0.04, equities_mcap: 0.003, realestate_mcap: 1.2, bonds_mcap: 0.06, bitcoin_mcap: 0 },
   // 1920: Post-war deflation
-  { year: 1920, m2_us: 0.034, m2_eu: 0.050, m2_japan: 0.007, m2_china: 0.003, fed_bs: 0.006, ecb_bs: 0.010, boj_bs: 0.002, pboc_bs: 0.001, tga: 0.001, rrp: 0, gold_usd: 20.67, sp500: 6.81, gold_mcap: 0.04, equities_mcap: 0.003, realestate_mcap: 1.3, bonds_mcap: 0.07 },
+  { year: 1920, m2_us: 0.034, m2_eu: 0.050, m2_japan: 0.007, m2_china: 0.003, fed_bs: 0.006, ecb_bs: 0.010, boj_bs: 0.002, pboc_bs: 0.001, tga: 0.001, rrp: 0, gold_usd: 20.67, sp500: 6.81, gold_mcap: 0.04, equities_mcap: 0.003, realestate_mcap: 1.3, bonds_mcap: 0.07, bitcoin_mcap: 0 },
   // 1929: Roaring 20s peak
-  { year: 1929, m2_us: 0.046, m2_eu: 0.055, m2_japan: 0.010, m2_china: 0.004, fed_bs: 0.005, ecb_bs: 0.008, boj_bs: 0.003, pboc_bs: 0.001, tga: 0.001, rrp: 0, gold_usd: 20.63, sp500: 21.45, gold_mcap: 0.04, equities_mcap: 0.09, realestate_mcap: 2.5, bonds_mcap: 0.12 },
+  { year: 1929, m2_us: 0.046, m2_eu: 0.055, m2_japan: 0.010, m2_china: 0.004, fed_bs: 0.005, ecb_bs: 0.008, boj_bs: 0.003, pboc_bs: 0.001, tga: 0.001, rrp: 0, gold_usd: 20.63, sp500: 21.45, gold_mcap: 0.04, equities_mcap: 0.09, realestate_mcap: 2.5, bonds_mcap: 0.12, bitcoin_mcap: 0 },
   // 1933: Great Depression trough — FDR revalues gold to $35
-  { year: 1933, m2_us: 0.032, m2_eu: 0.040, m2_japan: 0.009, m2_china: 0.003, fed_bs: 0.008, ecb_bs: 0.006, boj_bs: 0.003, pboc_bs: 0.001, tga: 0.002, rrp: 0, gold_usd: 26.33, sp500: 10.10, gold_mcap: 0.05, equities_mcap: 0.03, realestate_mcap: 1.5, bonds_mcap: 0.10 },
+  { year: 1933, m2_us: 0.032, m2_eu: 0.040, m2_japan: 0.009, m2_china: 0.003, fed_bs: 0.008, ecb_bs: 0.006, boj_bs: 0.003, pboc_bs: 0.001, tga: 0.002, rrp: 0, gold_usd: 26.33, sp500: 10.10, gold_mcap: 0.05, equities_mcap: 0.03, realestate_mcap: 1.5, bonds_mcap: 0.10, bitcoin_mcap: 0 },
   // 1940: Pre-WWII buildup — gold fixed at $35
-  { year: 1940, m2_us: 0.055, m2_eu: 0.048, m2_japan: 0.012, m2_china: 0.004, fed_bs: 0.020, ecb_bs: 0.012, boj_bs: 0.005, pboc_bs: 0.002, tga: 0.002, rrp: 0, gold_usd: 33.85, sp500: 10.58, gold_mcap: 0.07, equities_mcap: 0.04, realestate_mcap: 2.0, bonds_mcap: 0.15 },
+  { year: 1940, m2_us: 0.055, m2_eu: 0.048, m2_japan: 0.012, m2_china: 0.004, fed_bs: 0.020, ecb_bs: 0.012, boj_bs: 0.005, pboc_bs: 0.002, tga: 0.002, rrp: 0, gold_usd: 33.85, sp500: 10.58, gold_mcap: 0.07, equities_mcap: 0.04, realestate_mcap: 2.0, bonds_mcap: 0.15, bitcoin_mcap: 0 },
   // 1945: WWII peak — Bretton Woods, gold at $35
-  { year: 1945, m2_us: 0.127, m2_eu: 0.060, m2_japan: 0.020, m2_china: 0.005, fed_bs: 0.045, ecb_bs: 0.018, boj_bs: 0.008, pboc_bs: 0.002, tga: 0.025, rrp: 0, gold_usd: 34.71, sp500: 17.36, gold_mcap: 0.08, equities_mcap: 0.06, realestate_mcap: 2.5, bonds_mcap: 0.30 },
+  { year: 1945, m2_us: 0.127, m2_eu: 0.060, m2_japan: 0.020, m2_china: 0.005, fed_bs: 0.045, ecb_bs: 0.018, boj_bs: 0.008, pboc_bs: 0.002, tga: 0.025, rrp: 0, gold_usd: 34.71, sp500: 17.36, gold_mcap: 0.08, equities_mcap: 0.06, realestate_mcap: 2.5, bonds_mcap: 0.30, bitcoin_mcap: 0 },
   // 1950: Post-war normalization, Bretton Woods
-  { year: 1950, m2_us: 0.150, m2_eu: 0.080, m2_japan: 0.015, m2_china: 0.006, fed_bs: 0.040, ecb_bs: 0.020, boj_bs: 0.006, pboc_bs: 0.003, tga: 0.005, rrp: 0, gold_usd: 34.72, sp500: 20.41, gold_mcap: 0.08, equities_mcap: 0.09, realestate_mcap: 3.5, bonds_mcap: 0.40 },
+  { year: 1950, m2_us: 0.150, m2_eu: 0.080, m2_japan: 0.015, m2_china: 0.006, fed_bs: 0.040, ecb_bs: 0.020, boj_bs: 0.006, pboc_bs: 0.003, tga: 0.005, rrp: 0, gold_usd: 34.72, sp500: 20.41, gold_mcap: 0.08, equities_mcap: 0.09, realestate_mcap: 3.5, bonds_mcap: 0.40, bitcoin_mcap: 0 },
   // 1960: Post-war boom
-  { year: 1960, m2_us: 0.312, m2_eu: 0.180, m2_japan: 0.040, m2_china: 0.012, fed_bs: 0.050, ecb_bs: 0.035, boj_bs: 0.012, pboc_bs: 0.008, tga: 0.005, rrp: 0, gold_usd: 35.27, sp500: 58.11, gold_mcap: 0.09, equities_mcap: 0.30, realestate_mcap: 6.0, bonds_mcap: 0.60 },
+  { year: 1960, m2_us: 0.312, m2_eu: 0.180, m2_japan: 0.040, m2_china: 0.012, fed_bs: 0.050, ecb_bs: 0.035, boj_bs: 0.012, pboc_bs: 0.008, tga: 0.005, rrp: 0, gold_usd: 35.27, sp500: 58.11, gold_mcap: 0.09, equities_mcap: 0.30, realestate_mcap: 6.0, bonds_mcap: 0.60, bitcoin_mcap: 0 },
   // 1971: Nixon shock — gold freed from $35 peg
-  { year: 1971, m2_us: 0.710, m2_eu: 0.400, m2_japan: 0.120, m2_china: 0.020, fed_bs: 0.075, ecb_bs: 0.060, boj_bs: 0.025, pboc_bs: 0.012, tga: 0.010, rrp: 0, gold_usd: 41.25, sp500: 102.09, gold_mcap: 0.12, equities_mcap: 0.70, realestate_mcap: 10.0, bonds_mcap: 1.20 },
+  { year: 1971, m2_us: 0.710, m2_eu: 0.400, m2_japan: 0.120, m2_china: 0.020, fed_bs: 0.075, ecb_bs: 0.060, boj_bs: 0.025, pboc_bs: 0.012, tga: 0.010, rrp: 0, gold_usd: 41.25, sp500: 102.09, gold_mcap: 0.12, equities_mcap: 0.70, realestate_mcap: 10.0, bonds_mcap: 1.20, bitcoin_mcap: 0 },
   // 1975: Stagflation era — gold free market
-  { year: 1975, m2_us: 1.020, m2_eu: 0.620, m2_japan: 0.210, m2_china: 0.028, fed_bs: 0.095, ecb_bs: 0.080, boj_bs: 0.038, pboc_bs: 0.015, tga: 0.012, rrp: 0, gold_usd: 161, sp500: 90.19, gold_mcap: 0.49, equities_mcap: 0.90, realestate_mcap: 13.0, bonds_mcap: 2.00 },
+  { year: 1975, m2_us: 1.020, m2_eu: 0.620, m2_japan: 0.210, m2_china: 0.028, fed_bs: 0.095, ecb_bs: 0.080, boj_bs: 0.038, pboc_bs: 0.015, tga: 0.012, rrp: 0, gold_usd: 161, sp500: 90.19, gold_mcap: 0.49, equities_mcap: 0.90, realestate_mcap: 13.0, bonds_mcap: 2.00, bitcoin_mcap: 0 },
   // 1980: Volcker shock — gold peak at $850 intraday, ~$615 year-end
-  { year: 1980, m2_us: 1.600, m2_eu: 0.950, m2_japan: 0.350, m2_china: 0.040, fed_bs: 0.150, ecb_bs: 0.120, boj_bs: 0.055, pboc_bs: 0.020, tga: 0.015, rrp: 0, gold_usd: 615, sp500: 135.76, gold_mcap: 2.08, equities_mcap: 2.50, realestate_mcap: 20.0, bonds_mcap: 3.50 },
+  { year: 1980, m2_us: 1.600, m2_eu: 0.950, m2_japan: 0.350, m2_china: 0.040, fed_bs: 0.150, ecb_bs: 0.120, boj_bs: 0.055, pboc_bs: 0.020, tga: 0.015, rrp: 0, gold_usd: 615, sp500: 135.76, gold_mcap: 2.08, equities_mcap: 2.50, realestate_mcap: 20.0, bonds_mcap: 3.50, bitcoin_mcap: 0 },
   // 1985: Reagan expansion, Plaza Accord
-  { year: 1985, m2_us: 2.500, m2_eu: 1.300, m2_japan: 0.550, m2_china: 0.065, fed_bs: 0.200, ecb_bs: 0.170, boj_bs: 0.085, pboc_bs: 0.030, tga: 0.020, rrp: 0, gold_usd: 317, sp500: 211.28, gold_mcap: 1.17, equities_mcap: 4.00, realestate_mcap: 28.0, bonds_mcap: 6.00 },
+  { year: 1985, m2_us: 2.500, m2_eu: 1.300, m2_japan: 0.550, m2_china: 0.065, fed_bs: 0.200, ecb_bs: 0.170, boj_bs: 0.085, pboc_bs: 0.030, tga: 0.020, rrp: 0, gold_usd: 317, sp500: 211.28, gold_mcap: 1.17, equities_mcap: 4.00, realestate_mcap: 28.0, bonds_mcap: 6.00, bitcoin_mcap: 0 },
   // 1990: Japan bubble peak, German reunification
-  { year: 1990, m2_us: 3.280, m2_eu: 2.100, m2_japan: 1.100, m2_china: 0.150, fed_bs: 0.280, ecb_bs: 0.280, boj_bs: 0.180, pboc_bs: 0.060, tga: 0.030, rrp: 0, gold_usd: 383, sp500: 330.22, gold_mcap: 1.54, equities_mcap: 9.40, realestate_mcap: 40.0, bonds_mcap: 11.00 },
+  { year: 1990, m2_us: 3.280, m2_eu: 2.100, m2_japan: 1.100, m2_china: 0.150, fed_bs: 0.280, ecb_bs: 0.280, boj_bs: 0.180, pboc_bs: 0.060, tga: 0.030, rrp: 0, gold_usd: 383, sp500: 330.22, gold_mcap: 1.54, equities_mcap: 9.40, realestate_mcap: 40.0, bonds_mcap: 11.00, bitcoin_mcap: 0 },
   // 1995: Japan lost decade, Mexico crisis
-  { year: 1995, m2_us: 3.640, m2_eu: 2.800, m2_japan: 1.350, m2_china: 0.700, fed_bs: 0.400, ecb_bs: 0.350, boj_bs: 0.350, pboc_bs: 0.150, tga: 0.030, rrp: 0, gold_usd: 387, sp500: 615.93, gold_mcap: 1.68, equities_mcap: 15.00, realestate_mcap: 55.0, bonds_mcap: 18.00 },
+  { year: 1995, m2_us: 3.640, m2_eu: 2.800, m2_japan: 1.350, m2_china: 0.700, fed_bs: 0.400, ecb_bs: 0.350, boj_bs: 0.350, pboc_bs: 0.150, tga: 0.030, rrp: 0, gold_usd: 387, sp500: 615.93, gold_mcap: 1.68, equities_mcap: 15.00, realestate_mcap: 55.0, bonds_mcap: 18.00, bitcoin_mcap: 0 },
   // 2000: Dot-com peak — gold at 20-year low
-  { year: 2000, m2_us: 4.920, m2_eu: 4.500, m2_japan: 2.100, m2_china: 1.600, fed_bs: 0.620, ecb_bs: 0.750, boj_bs: 0.650, pboc_bs: 0.450, tga: 0.035, rrp: 0, gold_usd: 273, sp500: 1320.28, gold_mcap: 1.27, equities_mcap: 31.00, realestate_mcap: 75.0, bonds_mcap: 30.00 },
+  { year: 2000, m2_us: 4.920, m2_eu: 4.500, m2_japan: 2.100, m2_china: 1.600, fed_bs: 0.620, ecb_bs: 0.750, boj_bs: 0.650, pboc_bs: 0.450, tga: 0.035, rrp: 0, gold_usd: 273, sp500: 1320.28, gold_mcap: 1.27, equities_mcap: 31.00, realestate_mcap: 75.0, bonds_mcap: 30.00, bitcoin_mcap: 0 },
   // 2003: Post dot-com, Iraq War
-  { year: 2003, m2_us: 6.070, m2_eu: 5.800, m2_japan: 2.500, m2_china: 2.800, fed_bs: 0.720, ecb_bs: 0.900, boj_bs: 1.000, pboc_bs: 0.700, tga: 0.035, rrp: 0, gold_usd: 416, sp500: 1111.92, gold_mcap: 2.01, equities_mcap: 26.00, realestate_mcap: 85.0, bonds_mcap: 40.00 },
+  { year: 2003, m2_us: 6.070, m2_eu: 5.800, m2_japan: 2.500, m2_china: 2.800, fed_bs: 0.720, ecb_bs: 0.900, boj_bs: 1.000, pboc_bs: 0.700, tga: 0.035, rrp: 0, gold_usd: 416, sp500: 1111.92, gold_mcap: 2.01, equities_mcap: 26.00, realestate_mcap: 85.0, bonds_mcap: 40.00, bitcoin_mcap: 0 },
   // 2007: Pre-GFC peak
-  { year: 2007, m2_us: 7.500, m2_eu: 8.200, m2_japan: 2.800, m2_china: 5.400, fed_bs: 0.870, ecb_bs: 1.500, boj_bs: 1.050, pboc_bs: 1.800, tga: 0.040, rrp: 0, gold_usd: 836, sp500: 1468.36, gold_mcap: 4.30, equities_mcap: 60.00, realestate_mcap: 140.0, bonds_mcap: 65.00 },
-  // 2009: GFC response — QE1
-  { year: 2009, m2_us: 8.500, m2_eu: 8.800, m2_japan: 3.000, m2_china: 8.500, fed_bs: 2.100, ecb_bs: 2.000, boj_bs: 1.200, pboc_bs: 2.800, tga: 0.100, rrp: 0, gold_usd: 1096, sp500: 1115.10, gold_mcap: 5.77, equities_mcap: 35.00, realestate_mcap: 115.0, bonds_mcap: 75.00 },
+  { year: 2007, m2_us: 7.500, m2_eu: 8.200, m2_japan: 2.800, m2_china: 5.400, fed_bs: 0.870, ecb_bs: 1.500, boj_bs: 1.050, pboc_bs: 1.800, tga: 0.040, rrp: 0, gold_usd: 836, sp500: 1468.36, gold_mcap: 4.30, equities_mcap: 60.00, realestate_mcap: 140.0, bonds_mcap: 65.00, bitcoin_mcap: 0 },
+  // 2009: GFC response — QE1 — Bitcoin launched (mcap ~0)
+  { year: 2009, m2_us: 8.500, m2_eu: 8.800, m2_japan: 3.000, m2_china: 8.500, fed_bs: 2.100, ecb_bs: 2.000, boj_bs: 1.200, pboc_bs: 2.800, tga: 0.100, rrp: 0, gold_usd: 1096, sp500: 1115.10, gold_mcap: 5.77, equities_mcap: 35.00, realestate_mcap: 115.0, bonds_mcap: 75.00, bitcoin_mcap: 0 },
   // 2012: QE3 "infinity", ECB "whatever it takes"
-  { year: 2012, m2_us: 10.400, m2_eu: 9.600, m2_japan: 3.400, m2_china: 15.500, fed_bs: 2.900, ecb_bs: 3.000, boj_bs: 1.600, pboc_bs: 4.200, tga: 0.080, rrp: 0.10, gold_usd: 1675, sp500: 1426.19, gold_mcap: 9.42, equities_mcap: 55.00, realestate_mcap: 175.0, bonds_mcap: 97.00 },
+  { year: 2012, m2_us: 10.400, m2_eu: 9.600, m2_japan: 3.400, m2_china: 15.500, fed_bs: 2.900, ecb_bs: 3.000, boj_bs: 1.600, pboc_bs: 4.200, tga: 0.080, rrp: 0.10, gold_usd: 1675, sp500: 1426.19, gold_mcap: 9.42, equities_mcap: 55.00, realestate_mcap: 175.0, bonds_mcap: 97.00, bitcoin_mcap: 0.0001 },
   // 2014: End of QE3, start of ECB QE, Abenomics
-  { year: 2014, m2_us: 11.650, m2_eu: 10.500, m2_japan: 7.800, m2_china: 20.000, fed_bs: 4.500, ecb_bs: 2.000, boj_bs: 2.900, pboc_bs: 5.000, tga: 0.200, rrp: 0.15, gold_usd: 1199, sp500: 2058.90, gold_mcap: 6.93, equities_mcap: 63.00, realestate_mcap: 200.0, bonds_mcap: 105.00 },
+  { year: 2014, m2_us: 11.650, m2_eu: 10.500, m2_japan: 7.800, m2_china: 20.000, fed_bs: 4.500, ecb_bs: 2.000, boj_bs: 2.900, pboc_bs: 5.000, tga: 0.200, rrp: 0.15, gold_usd: 1199, sp500: 2058.90, gold_mcap: 6.93, equities_mcap: 63.00, realestate_mcap: 200.0, bonds_mcap: 105.00, bitcoin_mcap: 0.005 },
   // 2015: ECB QE launch, Fed normalization
-  { year: 2015, m2_us: 12.300, m2_eu: 10.800, m2_japan: 8.200, m2_china: 21.500, fed_bs: 4.480, ecb_bs: 2.700, boj_bs: 3.400, pboc_bs: 5.300, tga: 0.300, rrp: 0.20, gold_usd: 1060, sp500: 2043.94, gold_mcap: 6.23, equities_mcap: 65.00, realestate_mcap: 210.0, bonds_mcap: 100.00 },
+  { year: 2015, m2_us: 12.300, m2_eu: 10.800, m2_japan: 8.200, m2_china: 21.500, fed_bs: 4.480, ecb_bs: 2.700, boj_bs: 3.400, pboc_bs: 5.300, tga: 0.300, rrp: 0.20, gold_usd: 1060, sp500: 2043.94, gold_mcap: 6.23, equities_mcap: 65.00, realestate_mcap: 210.0, bonds_mcap: 100.00, bitcoin_mcap: 0.007 },
   // 2016: Brexit, BOJ negative rates, Trump election
-  { year: 2016, m2_us: 13.200, m2_eu: 11.400, m2_japan: 8.700, m2_china: 23.000, fed_bs: 4.450, ecb_bs: 3.400, boj_bs: 4.000, pboc_bs: 5.500, tga: 0.350, rrp: 0.15, gold_usd: 1151, sp500: 2238.83, gold_mcap: 7.48, equities_mcap: 64.00, realestate_mcap: 217.0, bonds_mcap: 105.00 },
-  // 2017: Synchronized global growth, Fed starts QT
-  { year: 2017, m2_us: 13.800, m2_eu: 12.400, m2_japan: 9.100, m2_china: 24.500, fed_bs: 4.400, ecb_bs: 4.400, boj_bs: 4.800, pboc_bs: 5.800, tga: 0.200, rrp: 0.10, gold_usd: 1296, sp500: 2673.61, gold_mcap: 7.64, equities_mcap: 85.00, realestate_mcap: 280.0, bonds_mcap: 110.00 },
-  // 2018: Fed hiking + QT, trade war
-  { year: 2018, m2_us: 14.350, m2_eu: 12.800, m2_japan: 9.400, m2_china: 25.800, fed_bs: 4.100, ecb_bs: 4.700, boj_bs: 5.200, pboc_bs: 5.600, tga: 0.350, rrp: 0.05, gold_usd: 1282, sp500: 2506.85, gold_mcap: 7.83, equities_mcap: 74.00, realestate_mcap: 280.0, bonds_mcap: 105.00 },
+  { year: 2016, m2_us: 13.200, m2_eu: 11.400, m2_japan: 8.700, m2_china: 23.000, fed_bs: 4.450, ecb_bs: 3.400, boj_bs: 4.000, pboc_bs: 5.500, tga: 0.350, rrp: 0.15, gold_usd: 1151, sp500: 2238.83, gold_mcap: 7.48, equities_mcap: 64.00, realestate_mcap: 217.0, bonds_mcap: 105.00, bitcoin_mcap: 0.015 },
+  // 2017: Synchronized global growth, Fed starts QT — BTC boom
+  { year: 2017, m2_us: 13.800, m2_eu: 12.400, m2_japan: 9.100, m2_china: 24.500, fed_bs: 4.400, ecb_bs: 4.400, boj_bs: 4.800, pboc_bs: 5.800, tga: 0.200, rrp: 0.10, gold_usd: 1296, sp500: 2673.61, gold_mcap: 7.64, equities_mcap: 85.00, realestate_mcap: 280.0, bonds_mcap: 110.00, bitcoin_mcap: 0.24 },
+  // 2018: Fed hiking + QT, trade war — crypto winter
+  { year: 2018, m2_us: 14.350, m2_eu: 12.800, m2_japan: 9.400, m2_china: 25.800, fed_bs: 4.100, ecb_bs: 4.700, boj_bs: 5.200, pboc_bs: 5.600, tga: 0.350, rrp: 0.05, gold_usd: 1282, sp500: 2506.85, gold_mcap: 7.83, equities_mcap: 74.00, realestate_mcap: 280.0, bonds_mcap: 105.00, bitcoin_mcap: 0.07 },
   // 2019: Fed pivot, repo crisis, rate cuts
-  { year: 2019, m2_us: 15.300, m2_eu: 13.100, m2_japan: 9.700, m2_china: 27.500, fed_bs: 4.200, ecb_bs: 4.700, boj_bs: 5.500, pboc_bs: 5.800, tga: 0.400, rrp: 0.00, gold_usd: 1517, sp500: 3230.78, gold_mcap: 8.73, equities_mcap: 89.00, realestate_mcap: 290.0, bonds_mcap: 115.00 },
+  { year: 2019, m2_us: 15.300, m2_eu: 13.100, m2_japan: 9.700, m2_china: 27.500, fed_bs: 4.200, ecb_bs: 4.700, boj_bs: 5.500, pboc_bs: 5.800, tga: 0.400, rrp: 0.00, gold_usd: 1517, sp500: 3230.78, gold_mcap: 8.73, equities_mcap: 89.00, realestate_mcap: 290.0, bonds_mcap: 115.00, bitcoin_mcap: 0.13 },
   // 2020: COVID — massive QE, M2 explosion
-  { year: 2020, m2_us: 19.100, m2_eu: 14.800, m2_japan: 10.500, m2_china: 32.000, fed_bs: 7.400, ecb_bs: 7.000, boj_bs: 6.700, pboc_bs: 6.200, tga: 1.600, rrp: 0.00, gold_usd: 1898, sp500: 3756.07, gold_mcap: 11.26, equities_mcap: 93.00, realestate_mcap: 310.0, bonds_mcap: 128.00 },
-  // 2021: Peak stimulus, RRP surge
-  { year: 2021, m2_us: 21.600, m2_eu: 16.000, m2_japan: 11.000, m2_china: 36.000, fed_bs: 8.800, ecb_bs: 8.600, boj_bs: 7.200, pboc_bs: 6.500, tga: 0.450, rrp: 1.90, gold_usd: 1829, sp500: 4766.18, gold_mcap: 11.62, equities_mcap: 121.00, realestate_mcap: 390.0, bonds_mcap: 135.00 },
-  // 2022: Tightening begins, inflation fight
-  { year: 2022, m2_us: 21.200, m2_eu: 15.200, m2_japan: 10.400, m2_china: 38.000, fed_bs: 8.500, ecb_bs: 8.000, boj_bs: 7.400, pboc_bs: 6.300, tga: 0.500, rrp: 2.20, gold_usd: 1824, sp500: 3839.50, gold_mcap: 11.80, equities_mcap: 101.00, realestate_mcap: 380.0, bonds_mcap: 133.00 },
+  { year: 2020, m2_us: 19.100, m2_eu: 14.800, m2_japan: 10.500, m2_china: 32.000, fed_bs: 7.400, ecb_bs: 7.000, boj_bs: 6.700, pboc_bs: 6.200, tga: 1.600, rrp: 0.00, gold_usd: 1898, sp500: 3756.07, gold_mcap: 11.26, equities_mcap: 93.00, realestate_mcap: 310.0, bonds_mcap: 128.00, bitcoin_mcap: 0.54 },
+  // 2021: Peak stimulus, RRP surge — BTC ATH $69K
+  { year: 2021, m2_us: 21.600, m2_eu: 16.000, m2_japan: 11.000, m2_china: 36.000, fed_bs: 8.800, ecb_bs: 8.600, boj_bs: 7.200, pboc_bs: 6.500, tga: 0.450, rrp: 1.90, gold_usd: 1829, sp500: 4766.18, gold_mcap: 11.62, equities_mcap: 121.00, realestate_mcap: 390.0, bonds_mcap: 135.00, bitcoin_mcap: 0.88 },
+  // 2022: Tightening begins, inflation fight — crypto crash
+  { year: 2022, m2_us: 21.200, m2_eu: 15.200, m2_japan: 10.400, m2_china: 38.000, fed_bs: 8.500, ecb_bs: 8.000, boj_bs: 7.400, pboc_bs: 6.300, tga: 0.500, rrp: 2.20, gold_usd: 1824, sp500: 3839.50, gold_mcap: 11.80, equities_mcap: 101.00, realestate_mcap: 380.0, bonds_mcap: 133.00, bitcoin_mcap: 0.32 },
   // 2023: QT continues, RRP drawdown
-  { year: 2023, m2_us: 20.800, m2_eu: 14.500, m2_japan: 10.200, m2_china: 40.500, fed_bs: 7.700, ecb_bs: 7.000, boj_bs: 7.500, pboc_bs: 6.500, tga: 0.750, rrp: 0.70, gold_usd: 2063, sp500: 4769.83, gold_mcap: 12.93, equities_mcap: 112.00, realestate_mcap: 385.0, bonds_mcap: 141.00 },
-  // 2024: Pivot whispers, gradual easing
-  { year: 2024, m2_us: 21.500, m2_eu: 14.800, m2_japan: 10.000, m2_china: 43.000, fed_bs: 7.100, ecb_bs: 6.500, boj_bs: 7.600, pboc_bs: 7.000, tga: 0.800, rrp: 0.40, gold_usd: 2625, sp500: 5881.63, gold_mcap: 16.12, equities_mcap: 128.00, realestate_mcap: 393.0, bonds_mcap: 145.00 },
+  { year: 2023, m2_us: 20.800, m2_eu: 14.500, m2_japan: 10.200, m2_china: 40.500, fed_bs: 7.700, ecb_bs: 7.000, boj_bs: 7.500, pboc_bs: 6.500, tga: 0.750, rrp: 0.70, gold_usd: 2063, sp500: 4769.83, gold_mcap: 12.93, equities_mcap: 112.00, realestate_mcap: 385.0, bonds_mcap: 141.00, bitcoin_mcap: 0.83 },
+  // 2024: Pivot whispers, gradual easing — BTC ETF approved
+  { year: 2024, m2_us: 21.500, m2_eu: 14.800, m2_japan: 10.000, m2_china: 43.000, fed_bs: 7.100, ecb_bs: 6.500, boj_bs: 7.600, pboc_bs: 7.000, tga: 0.800, rrp: 0.40, gold_usd: 2625, sp500: 5881.63, gold_mcap: 16.12, equities_mcap: 128.00, realestate_mcap: 393.0, bonds_mcap: 145.00, bitcoin_mcap: 1.85 },
   // 2025: Re-expansion cycle
-  { year: 2025, m2_us: 22.300, m2_eu: 15.200, m2_japan: 10.200, m2_china: 45.500, fed_bs: 7.000, ecb_bs: 6.300, boj_bs: 7.800, pboc_bs: 7.500, tga: 0.700, rrp: 0.30, gold_usd: 2850, sp500: 6040, gold_mcap: 18.90, equities_mcap: 148.00, realestate_mcap: 405.0, bonds_mcap: 150.00 },
+  { year: 2025, m2_us: 22.300, m2_eu: 15.200, m2_japan: 10.200, m2_china: 45.500, fed_bs: 7.000, ecb_bs: 6.300, boj_bs: 7.800, pboc_bs: 7.500, tga: 0.700, rrp: 0.30, gold_usd: 2850, sp500: 6040, gold_mcap: 18.90, equities_mcap: 148.00, realestate_mcap: 405.0, bonds_mcap: 150.00, bitcoin_mcap: 1.75 },
 ];
 
 
@@ -159,6 +162,7 @@ function interpolate(a: AnnualSnapshot, b: AnnualSnapshot, year: number): Annual
     equities_mcap: expInterp(Math.max(a.equities_mcap, 0.001), Math.max(b.equities_mcap, 0.001)),
     realestate_mcap: expInterp(a.realestate_mcap, b.realestate_mcap),
     bonds_mcap: expInterp(Math.max(a.bonds_mcap, 0.001), Math.max(b.bonds_mcap, 0.001)),
+    bitcoin_mcap: a.bitcoin_mcap === 0 && b.bitcoin_mcap === 0 ? 0 : expInterp(Math.max(a.bitcoin_mcap, 0.0000001), Math.max(b.bitcoin_mcap, 0.0000001)),
   };
 }
 
@@ -193,11 +197,13 @@ function generateData(): LiquidityDataPoint[] {
     const denominator_index = ((m2_global / baseM2) * 0.6 + (cb_total / baseCB) * 0.4) * 100;
 
     // Market cap wealth distribution (% of total)
-    const totalWealth = snap.gold_mcap + snap.equities_mcap + snap.realestate_mcap + snap.bonds_mcap;
+    const btcMcap = snap.bitcoin_mcap > 0.0000001 ? snap.bitcoin_mcap : 0;
+    const totalWealth = snap.gold_mcap + snap.equities_mcap + snap.realestate_mcap + snap.bonds_mcap + btcMcap;
     const goldPct = (snap.gold_mcap / totalWealth) * 100;
     const equitiesPct = (snap.equities_mcap / totalWealth) * 100;
     const realestatePct = (snap.realestate_mcap / totalWealth) * 100;
     const bondsPct = (snap.bonds_mcap / totalWealth) * 100;
+    const bitcoinPct = (btcMcap / totalWealth) * 100;
 
     data.push({
       date: `${year}`,
@@ -226,12 +232,14 @@ function generateData(): LiquidityDataPoint[] {
       equities_mcap: +snap.equities_mcap.toFixed(2),
       realestate_mcap: +snap.realestate_mcap.toFixed(2),
       bonds_mcap: +snap.bonds_mcap.toFixed(2),
+      bitcoin_mcap: +btcMcap.toFixed(4),
       gold_capture_pct: +(((snap.gold_usd / baseGold) / (denominator_index / 100)) * 100).toFixed(1),
       gold_gap_pct: +((1 - (snap.gold_usd / baseGold) / (denominator_index / 100)) * 100).toFixed(1),
       gold_wealth_pct: +goldPct.toFixed(1),
       equities_wealth_pct: +equitiesPct.toFixed(1),
       realestate_wealth_pct: +realestatePct.toFixed(1),
       bonds_wealth_pct: +bondsPct.toFixed(1),
+      bitcoin_wealth_pct: +bitcoinPct.toFixed(2),
       sp500_capture_pct: +equitiesPct.toFixed(1),
       realestate_capture_pct: +realestatePct.toFixed(1),
       bonds_capture_pct: +bondsPct.toFixed(1),
