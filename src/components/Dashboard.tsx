@@ -501,6 +501,107 @@ export default function Dashboard() {
         </ChartSection>
       </div>
 
+      {/* Gold vs Denominator */}
+      <div className="mt-6">
+        <ChartSection
+          title="Oro — Nominal vs Real"
+          subtitle="Precio del oro en USD y ajustado por el Índice Denominador. Si el oro solo sube porque el dinero se encoge, la línea real se mantiene plana."
+          delay={5}
+        >
+          <div className="h-[320px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={filteredData}>
+                <defs>
+                  <linearGradient id="gradGold" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.amber} stopOpacity={0.2} />
+                    <stop offset="100%" stopColor={COLORS.amber} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
+                <XAxis
+                  dataKey="date"
+                  stroke="var(--text-muted)"
+                  tick={{ fontSize: 10 }}
+                  ticks={xTicks}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  yAxisId="nominal"
+                  stroke="var(--text-muted)"
+                  tick={{ fontSize: 10 }}
+                  axisLine={false}
+                  tickLine={false}
+                  scale={logScale ? "log" : "auto"}
+                  domain={logScale ? ["auto", "auto"] : [0, "auto"]}
+                  allowDataOverflow={logScale}
+                  tickFormatter={(v: number) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}K` : v}`}
+                />
+                <YAxis
+                  yAxisId="real"
+                  orientation="right"
+                  stroke={COLORS.muted}
+                  tick={{ fontSize: 10 }}
+                  axisLine={false}
+                  tickLine={false}
+                  domain={[0, "auto"]}
+                />
+                <Tooltip
+                  content={({ active, payload, label }: any) => {
+                    if (!active || !payload) return null;
+                    return (
+                      <div
+                        className="rounded-lg px-4 py-3 text-xs"
+                        style={{
+                          background: "rgba(6,6,11,0.95)",
+                          border: "1px solid var(--border)",
+                          backdropFilter: "blur(10px)",
+                        }}
+                      >
+                        <p className="mb-2 font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
+                        {payload.map((entry: any, i: number) => (
+                          <div key={i} className="flex items-center gap-2 py-0.5">
+                            <div className="w-2 h-2 rounded-full" style={{ background: entry.color }} />
+                            <span style={{ color: "var(--text-muted)" }}>{entry.name}:</span>
+                            <span className="font-medium tabular-nums" style={{ color: entry.color }}>
+                              {entry.dataKey === "gold_usd" ? `$${entry.value.toLocaleString()}` : entry.value.toFixed(2)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }}
+                />
+                <Area
+                  yAxisId="nominal"
+                  type="monotone"
+                  dataKey="gold_usd"
+                  name="Oro (USD)"
+                  stroke={COLORS.amber}
+                  fill="url(#gradGold)"
+                  strokeWidth={2}
+                />
+                <Line
+                  yAxisId="real"
+                  type="monotone"
+                  dataKey="gold_real"
+                  name="Oro Real (ajustado)"
+                  stroke={COLORS.cyan}
+                  strokeWidth={2}
+                  dot={false}
+                />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
+          <ChartLegend
+            items={[
+              { color: COLORS.amber, label: "Oro (USD nominal)" },
+              { color: COLORS.cyan, label: "Oro Real (ajustado por denominador)" },
+            ]}
+          />
+        </ChartSection>
+      </div>
+
       {/* M2 Global Aggregate */}
       <div className="mt-6">
         <ChartSection
