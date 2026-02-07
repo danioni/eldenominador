@@ -501,11 +501,11 @@ export default function Dashboard() {
         </ChartSection>
       </div>
 
-      {/* Gold Index vs Denominator Index */}
+      {/* Assets vs Denominator Index */}
       <div className="mt-6">
         <ChartSection
-          title="Oro vs Denominador"
-          subtitle="Ambos indexados a base 100 en 1913. El oro subió ~138x. El denominador ~3.400x. La brecha es dilución que ni el oro capturó."
+          title="Activos vs Denominador"
+          subtitle="Todos indexados a base 100 en 1913. El S&P 500 subió ~750x, el oro ~138x, pero el denominador ~3.400x. Las acciones capturan mejor la expansión, pero ninguna la alcanza."
           delay={5}
         >
           <div className="h-[320px]">
@@ -519,6 +519,10 @@ export default function Dashboard() {
                   <linearGradient id="gradDenomIdx" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor={COLORS.green} stopOpacity={0.1} />
                     <stop offset="100%" stopColor={COLORS.green} stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="gradSP500Idx" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.blue} stopOpacity={0.15} />
+                    <stop offset="100%" stopColor={COLORS.blue} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
@@ -556,13 +560,22 @@ export default function Dashboard() {
                       >
                         <p className="mb-2 font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
                         {point && (
-                          <div className="flex items-center gap-2 py-0.5 mb-1">
-                            <div className="w-2 h-2 rounded-full" style={{ background: COLORS.amber }} />
-                            <span style={{ color: "var(--text-muted)" }}>Oro:</span>
-                            <span className="font-medium tabular-nums" style={{ color: COLORS.amber }}>
-                              ${point.gold_usd.toLocaleString()}/oz
-                            </span>
-                          </div>
+                          <>
+                            <div className="flex items-center gap-2 py-0.5">
+                              <div className="w-2 h-2 rounded-full" style={{ background: COLORS.amber }} />
+                              <span style={{ color: "var(--text-muted)" }}>Oro:</span>
+                              <span className="font-medium tabular-nums" style={{ color: COLORS.amber }}>
+                                ${point.gold_usd.toLocaleString()}/oz
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 py-0.5 mb-1">
+                              <div className="w-2 h-2 rounded-full" style={{ background: COLORS.blue }} />
+                              <span style={{ color: "var(--text-muted)" }}>S&P 500:</span>
+                              <span className="font-medium tabular-nums" style={{ color: COLORS.blue }}>
+                                {point.sp500.toLocaleString()}
+                              </span>
+                            </div>
+                          </>
                         )}
                         {payload.map((entry: any, i: number) => (
                           <div key={i} className="flex items-center gap-2 py-0.5">
@@ -587,6 +600,14 @@ export default function Dashboard() {
                 />
                 <Area
                   type="monotone"
+                  dataKey="sp500_index"
+                  name="S&P 500"
+                  stroke={COLORS.blue}
+                  fill="url(#gradSP500Idx)"
+                  strokeWidth={2}
+                />
+                <Area
+                  type="monotone"
                   dataKey="gold_index"
                   name="Oro"
                   stroke={COLORS.amber}
@@ -599,6 +620,7 @@ export default function Dashboard() {
           <ChartLegend
             items={[
               { color: COLORS.green, label: "Denominador (base 100)" },
+              { color: COLORS.blue, label: "S&P 500 (base 100)" },
               { color: COLORS.amber, label: "Oro (base 100)" },
             ]}
           />
