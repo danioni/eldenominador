@@ -51,7 +51,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="noise-overlay">{children}</body>
+      <body className="noise-overlay">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
