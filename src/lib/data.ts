@@ -19,7 +19,7 @@ export interface LiquidityDataPoint {
   denominator_index: number;
 }
 
-// Generate monthly data from 2020 to 2025
+// Generate monthly data from 2015 to 2025 (11 years)
 function generateData(): LiquidityDataPoint[] {
   const data: LiquidityDataPoint[] = [];
   const months = [
@@ -27,21 +27,31 @@ function generateData(): LiquidityDataPoint[] {
     "Jul", "Ago", "Sep", "Oct", "Nov", "Dic",
   ];
 
-  // Base values (trillions USD) — roughly accurate starting points
-  let m2_us = 15.4;
-  let m2_eu = 14.2;
-  let m2_japan = 9.8;
-  let m2_china = 30.5;
-  let fed_bs = 4.2;
-  let ecb_bs = 5.1;
-  let boj_bs = 5.5;
-  let pboc_bs = 5.8;
-  let tga = 0.4;
-  let rrp = 0.0;
+  // Base values (trillions USD) — roughly accurate starting points for Jan 2015
+  let m2_us = 11.7;
+  let m2_eu = 10.8;
+  let m2_japan = 8.2;
+  let m2_china = 20.5;
+  let fed_bs = 4.5;
+  let ecb_bs = 2.2;
+  let boj_bs = 3.1;
+  let pboc_bs = 5.2;
+  let tga = 0.25;
+  let rrp = 0.15;
 
-  // Growth scenarios per phase
+  // Growth scenarios per phase (per month)
   const phases = [
-    // 2020: COVID expansion
+    // 2015: Post-taper, slow normalization
+    { m2_g: 0.004, fed_g: -0.001, ecb_g: 0.025, boj_g: 0.015, pboc_g: 0.005, tga_d: 0.3, rrp_d: 0.2 },
+    // 2016: Global uncertainty, Brexit, BOJ negative rates
+    { m2_g: 0.005, fed_g: 0.001, ecb_g: 0.02, boj_g: 0.018, pboc_g: 0.004, tga_d: 0.35, rrp_d: 0.15 },
+    // 2017: Synchronized global growth, Fed starts QT
+    { m2_g: 0.004, fed_g: -0.003, ecb_g: 0.015, boj_g: 0.012, pboc_g: 0.006, tga_d: 0.2, rrp_d: 0.1 },
+    // 2018: Fed hiking + QT, trade war starts
+    { m2_g: 0.003, fed_g: -0.005, ecb_g: 0.005, boj_g: 0.008, pboc_g: 0.004, tga_d: 0.35, rrp_d: 0.05 },
+    // 2019: Fed pivot, repo crisis Sep, rate cuts begin
+    { m2_g: 0.005, fed_g: 0.008, ecb_g: 0.003, boj_g: 0.005, pboc_g: 0.005, tga_d: 0.4, rrp_d: 0.0 },
+    // 2020: COVID expansion — massive QE
     { m2_g: 0.018, fed_g: 0.06, ecb_g: 0.03, boj_g: 0.015, pboc_g: 0.01, tga_d: 0.8, rrp_d: 0.0 },
     // 2021: Peak stimulus
     { m2_g: 0.012, fed_g: 0.02, ecb_g: 0.02, boj_g: 0.01, pboc_g: 0.008, tga_d: 0.7, rrp_d: 1.5 },
@@ -55,7 +65,11 @@ function generateData(): LiquidityDataPoint[] {
     { m2_g: 0.006, fed_g: 0.005, ecb_g: 0.003, boj_g: 0.004, pboc_g: 0.01, tga_d: 0.7, rrp_d: 0.3 },
   ];
 
-  for (let year = 0; year < 6; year++) {
+  // Base for index calculation (Jan 2015 values)
+  const baseM2 = m2_us + m2_eu + m2_japan + m2_china;
+  const baseCB = fed_bs + ecb_bs + boj_bs + pboc_bs;
+
+  for (let year = 0; year < 11; year++) {
     const phase = phases[year];
     for (let month = 0; month < 12; month++) {
       // Add some noise
@@ -79,14 +93,12 @@ function generateData(): LiquidityDataPoint[] {
       const cb_total = fed_bs + ecb_bs + boj_bs + pboc_bs;
       const net_liq = fed_bs - tga - rrp;
 
-      // Denominator index: normalized composite (base 100 = Jan 2020)
-      const baseM2 = 69.9; // sum of starting M2s
-      const baseCB = 20.6; // sum of starting CB BSs
+      // Denominator index: normalized composite (base 100 = Jan 2015)
       const denominator_index =
         ((m2_global / baseM2) * 0.6 + (cb_total / baseCB) * 0.4) * 100;
 
       data.push({
-        date: `${months[month]} ${2020 + year}`,
+        date: `${months[month]} ${2015 + year}`,
         m2_us: +m2_us.toFixed(2),
         m2_eu: +m2_eu.toFixed(2),
         m2_japan: +m2_japan.toFixed(2),

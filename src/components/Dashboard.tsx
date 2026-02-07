@@ -20,7 +20,7 @@ import { liquidityData, getLatestMetrics } from "@/lib/data";
 import MetricCard from "./MetricCard";
 import ChartSection from "./ChartSection";
 
-type TimeRange = "1Y" | "3Y" | "ALL";
+type TimeRange = "1Y" | "3Y" | "5Y" | "ALL";
 
 const COLORS = {
   green: "#00ff88",
@@ -100,18 +100,18 @@ function TimeRangeSelector({
   range: TimeRange;
   onChange: (r: TimeRange) => void;
 }) {
-  const options: TimeRange[] = ["1Y", "3Y", "ALL"];
+  const options: TimeRange[] = ["1Y", "3Y", "5Y", "ALL"];
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1 p-1 rounded-lg" style={{ background: "rgba(16, 16, 26, 0.6)", border: "1px solid var(--border-subtle)" }}>
       {options.map((opt) => (
         <button
           key={opt}
           onClick={() => onChange(opt)}
-          className="px-3 py-1 rounded text-[10px] tracking-wider uppercase transition-all"
+          className="px-3.5 py-1.5 rounded-md text-[10px] tracking-wider uppercase transition-all"
           style={{
             background:
               range === opt
-                ? "rgba(0,255,136,0.1)"
+                ? "rgba(0,255,136,0.12)"
                 : "transparent",
             color:
               range === opt
@@ -121,6 +121,10 @@ function TimeRangeSelector({
               range === opt
                 ? "1px solid rgba(0,255,136,0.2)"
                 : "1px solid transparent",
+            boxShadow:
+              range === opt
+                ? "0 0 12px rgba(0,255,136,0.06)"
+                : "none",
           }}
         >
           {opt}
@@ -138,18 +142,19 @@ export default function Dashboard() {
     const total = liquidityData.length;
     if (range === "1Y") return liquidityData.slice(-12);
     if (range === "3Y") return liquidityData.slice(-36);
+    if (range === "5Y") return liquidityData.slice(-60);
     return liquidityData;
   }, [range]);
 
   // Thin out labels for x-axis
-  const tickInterval = range === "1Y" ? 1 : range === "3Y" ? 5 : 11;
+  const tickInterval = range === "1Y" ? 1 : range === "3Y" ? 5 : range === "5Y" ? 11 : 17;
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
       {/* Thesis banner */}
-      <div className="mb-8 fade-in-up">
+      <div className="mb-12 fade-in-up pt-4">
         <p
-          className="font-serif text-3xl md:text-4xl leading-tight"
+          className="font-serif text-4xl md:text-5xl leading-[1.15] tracking-tight"
           style={{ color: "var(--text-primary)" }}
         >
           Los precios no suben.
@@ -159,22 +164,23 @@ export default function Dashboard() {
           </span>
         </p>
         <p
-          className="mt-3 text-sm max-w-2xl leading-relaxed"
+          className="mt-4 text-sm max-w-2xl leading-relaxed"
           style={{ color: "var(--text-secondary)" }}
         >
           Cada precio que ves es una fracción. El numerador es el activo.
           El denominador es la cantidad de unidades monetarias en circulación.
           Cuando el denominador crece, el número sube — pero el valor real no cambia.
         </p>
+        <div className="divider-gradient mt-8" />
       </div>
 
       {/* Time range */}
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end mb-6">
         <TimeRangeSelector range={range} onChange={setRange} />
       </div>
 
       {/* Metrics row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
         <MetricCard
           label={metrics.m2Global.label}
           value={metrics.m2Global.value}
@@ -208,7 +214,7 @@ export default function Dashboard() {
       {/* Denominator Index - hero chart */}
       <ChartSection
         title="Índice Denominador"
-        subtitle="Compuesto ponderado: 60% M2 Global + 40% Balance Bancos Centrales · Base 100 = Enero 2020"
+        subtitle="Compuesto ponderado: 60% M2 Global + 40% Balance Bancos Centrales · Base 100 = Enero 2015"
         delay={3}
       >
         <div className="h-[320px]">
@@ -251,7 +257,7 @@ export default function Dashboard() {
       </ChartSection>
 
       {/* Two column layout */}
-      <div className="grid lg:grid-cols-2 gap-4 mt-4">
+      <div className="grid lg:grid-cols-2 gap-5 mt-6">
         {/* M2 Global */}
         <ChartSection
           title="M2 — Oferta Monetaria"
@@ -374,7 +380,7 @@ export default function Dashboard() {
       </div>
 
       {/* Net Liquidity - full width */}
-      <div className="mt-4">
+      <div className="mt-6">
         <ChartSection
           title="Liquidez Neta de la Fed"
           subtitle="Fed Balance Sheet − TGA − RRP = Liquidez disponible real en el sistema (trillones USD)"
@@ -445,7 +451,7 @@ export default function Dashboard() {
       </div>
 
       {/* M2 Global Aggregate */}
-      <div className="mt-4">
+      <div className="mt-6">
         <ChartSection
           title="M2 Global Agregado"
           subtitle="Suma total de oferta monetaria M2 de las principales economías (trillones USD)"
