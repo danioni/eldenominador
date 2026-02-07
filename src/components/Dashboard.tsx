@@ -605,6 +605,108 @@ export default function Dashboard() {
         </ChartSection>
       </div>
 
+      {/* Gold Capture vs Gap */}
+      <div className="mt-6">
+        <ChartSection
+          title="¿Cuánto capturó el oro?"
+          subtitle="Porcentaje de la expansión monetaria que el oro absorbió vs lo que fue a parar a otros activos: inmuebles, acciones, bonos y deuda soberana."
+          delay={5}
+        >
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={filteredData} stackOffset="expand">
+                <defs>
+                  <linearGradient id="gradCapture" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.amber} stopOpacity={0.4} />
+                    <stop offset="100%" stopColor={COLORS.amber} stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="gradGap" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.red} stopOpacity={0.15} />
+                    <stop offset="100%" stopColor={COLORS.red} stopOpacity={0.05} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
+                <XAxis
+                  dataKey="date"
+                  stroke="var(--text-muted)"
+                  tick={{ fontSize: 10 }}
+                  ticks={xTicks}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  stroke="var(--text-muted)"
+                  tick={{ fontSize: 10 }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(v: number) => `${(v * 100).toFixed(0)}%`}
+                />
+                <Tooltip
+                  content={({ active, payload, label }: any) => {
+                    if (!active || !payload) return null;
+                    const point = filteredData.find((d: any) => d.date === label);
+                    return (
+                      <div
+                        className="rounded-lg px-4 py-3 text-xs"
+                        style={{
+                          background: "rgba(6,6,11,0.95)",
+                          border: "1px solid var(--border)",
+                          backdropFilter: "blur(10px)",
+                        }}
+                      >
+                        <p className="mb-2 font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
+                        {point && (
+                          <>
+                            <div className="flex items-center gap-2 py-0.5">
+                              <div className="w-2 h-2 rounded-full" style={{ background: COLORS.amber }} />
+                              <span style={{ color: "var(--text-muted)" }}>Oro capturó:</span>
+                              <span className="font-medium tabular-nums" style={{ color: COLORS.amber }}>
+                                {point.gold_capture_pct.toFixed(1)}%
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 py-0.5">
+                              <div className="w-2 h-2 rounded-full" style={{ background: COLORS.red }} />
+                              <span style={{ color: "var(--text-muted)" }}>Otros activos:</span>
+                              <span className="font-medium tabular-nums" style={{ color: COLORS.red }}>
+                                {point.gold_gap_pct.toFixed(1)}%
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    );
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="gold_capture_pct"
+                  name="Oro capturó"
+                  stackId="1"
+                  stroke={COLORS.amber}
+                  fill="url(#gradCapture)"
+                  strokeWidth={1.5}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="gold_gap_pct"
+                  name="Otros activos"
+                  stackId="1"
+                  stroke={COLORS.red}
+                  fill="url(#gradGap)"
+                  strokeWidth={1.5}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+          <ChartLegend
+            items={[
+              { color: COLORS.amber, label: "Capturado por el oro" },
+              { color: COLORS.red, label: "Inmuebles, acciones, bonos" },
+            ]}
+          />
+        </ChartSection>
+      </div>
+
       {/* M2 Global Aggregate */}
       <div className="mt-6">
         <ChartSection

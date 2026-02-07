@@ -20,6 +20,8 @@ export interface LiquidityDataPoint {
   denominator_index: number;
   gold_usd: number;
   gold_index: number; // gold indexed to base 100 = 1913 ($20.67/oz)
+  gold_capture_pct: number; // % of denominator growth captured by gold
+  gold_gap_pct: number; // % not captured (goes to other assets)
 }
 
 // Annual data points for major monetary eras (1913-2014)
@@ -179,6 +181,8 @@ function generateData(): LiquidityDataPoint[] {
       denominator_index: +denominator_index.toFixed(1),
       gold_usd: +snap.gold_usd.toFixed(0),
       gold_index: +((snap.gold_usd / baseGold) * 100).toFixed(1),
+      gold_capture_pct: +(((snap.gold_usd / baseGold) / (denominator_index / 100)) * 100).toFixed(1),
+      gold_gap_pct: +((1 - (snap.gold_usd / baseGold) / (denominator_index / 100)) * 100).toFixed(1),
     });
   }
 
