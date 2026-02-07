@@ -187,6 +187,7 @@ export default function Dashboard() {
   const [range, setRange] = useState<TimeRange>("ALL");
   const [logScale, setLogScale] = useState(false);
   const [realWealth, setRealWealth] = useState(false);
+  const COLORS = useThemeColors();
   const metrics = useMemo(() => getLatestMetrics(), []);
 
   const filteredData = useMemo(() => {
@@ -740,9 +741,9 @@ export default function Dashboard() {
               onClick={() => setRealWealth(!realWealth)}
               className="px-3.5 py-1.5 rounded-md text-[10px] tracking-wider uppercase transition-all"
               style={{
-                background: realWealth ? "rgba(0, 255, 136, 0.12)" : "rgba(255, 255, 255, 0.04)",
+                background: realWealth ? "var(--accent-green-bg-active)" : "var(--controls-bg)",
                 color: realWealth ? "var(--accent-green)" : "var(--text-muted)",
-                border: `1px solid ${realWealth ? "rgba(0, 255, 136, 0.3)" : "var(--border-subtle)"}`,
+                border: `1px solid ${realWealth ? "var(--accent-green-border-active)" : "var(--border-subtle)"}`,
               }}
             >
               {realWealth ? "Real (ajustado)" : "Nominal"}

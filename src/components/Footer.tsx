@@ -8,7 +8,7 @@ export default function Footer() {
         className="h-[1px]"
         style={{
           background:
-            "linear-gradient(90deg, transparent, rgba(0,255,136,0.15) 50%, transparent)",
+            "linear-gradient(90deg, transparent, var(--accent-green-border) 50%, transparent)",
         }}
       />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -16,8 +16,8 @@ export default function Footer() {
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center"
             style={{
-              background: "rgba(0,255,136,0.06)",
-              border: "1px solid rgba(0,255,136,0.1)",
+              background: "var(--accent-green-bg)",
+              border: "1px solid var(--accent-green-border)",
             }}
           >
             <svg viewBox="0 0 64 64" className="w-4 h-4">

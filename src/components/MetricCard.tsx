@@ -59,7 +59,7 @@ export default function MetricCard({ label, value, change, unit, delay = 0 }: Me
           className="text-xs font-medium tabular-nums px-1.5 py-0.5 rounded"
           style={{
             color: changeColor,
-            background: isPositive ? "rgba(0,255,136,0.08)" : "rgba(255,51,85,0.08)",
+            background: isPositive ? "var(--accent-green-bg)" : "var(--accent-red-bg)",
           }}
         >
           {arrow} {formatChangeValue(change)}
