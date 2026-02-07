@@ -25,6 +25,10 @@ export interface LiquidityDataPoint {
   realestate_usd: number; // median US home price
   realestate_index: number; // real estate indexed to base 100 = 1913
   bonds_total_return: number; // US 10Y total return index (1913 = 100)
+  gold_mcap: number; // gold market cap in trillions USD
+  equities_mcap: number; // global equities market cap in trillions USD
+  realestate_mcap: number; // global real estate market cap in trillions USD
+  bonds_mcap: number; // global bonds market cap in trillions USD
   gold_capture_pct: number; // % of denominator growth captured by gold (legacy)
   gold_gap_pct: number; // % not captured (goes to other assets) — legacy
   gold_wealth_pct: number; // % of total wealth in gold (market cap based)
@@ -218,6 +222,10 @@ function generateData(): LiquidityDataPoint[] {
       realestate_usd: +snap.realestate_mcap.toFixed(2),
       realestate_index: +((snap.realestate_mcap / base1913.realestate_mcap) * 100).toFixed(1),
       bonds_total_return: +snap.bonds_mcap.toFixed(2),
+      gold_mcap: +snap.gold_mcap.toFixed(2),
+      equities_mcap: +snap.equities_mcap.toFixed(2),
+      realestate_mcap: +snap.realestate_mcap.toFixed(2),
+      bonds_mcap: +snap.bonds_mcap.toFixed(2),
       gold_capture_pct: +(((snap.gold_usd / baseGold) / (denominator_index / 100)) * 100).toFixed(1),
       gold_gap_pct: +((1 - (snap.gold_usd / baseGold) / (denominator_index / 100)) * 100).toFixed(1),
       gold_wealth_pct: +goldPct.toFixed(1),

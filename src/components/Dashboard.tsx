@@ -627,11 +627,148 @@ export default function Dashboard() {
         </ChartSection>
       </div>
 
-      {/* Wealth Distribution by Asset Class */}
+      {/* Wealth Market Cap — Absolute */}
       <div className="mt-6">
         <ChartSection
-          title="¿A dónde fue la riqueza?"
-          subtitle="Distribución del market cap global entre clases de activos. Inmuebles dominan, pero las acciones ganan terreno década a década."
+          title="Riqueza global en trillones"
+          subtitle="Market cap total por clase de activo en USD nominales. De $1T en 1913 a $721T en 2025 — el denominador en acción."
+          delay={5}
+        >
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={filteredData}>
+                <defs>
+                  <linearGradient id="gradGoldAbs" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.amber} stopOpacity={0.5} />
+                    <stop offset="100%" stopColor={COLORS.amber} stopOpacity={0.05} />
+                  </linearGradient>
+                  <linearGradient id="gradEquitiesAbs" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.blue} stopOpacity={0.5} />
+                    <stop offset="100%" stopColor={COLORS.blue} stopOpacity={0.05} />
+                  </linearGradient>
+                  <linearGradient id="gradREAbs" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.purple} stopOpacity={0.4} />
+                    <stop offset="100%" stopColor={COLORS.purple} stopOpacity={0.05} />
+                  </linearGradient>
+                  <linearGradient id="gradBondsAbs" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.cyan} stopOpacity={0.4} />
+                    <stop offset="100%" stopColor={COLORS.cyan} stopOpacity={0.05} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
+                <XAxis
+                  dataKey="date"
+                  stroke="var(--text-muted)"
+                  tick={{ fontSize: 10 }}
+                  ticks={xTicks}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  stroke="var(--text-muted)"
+                  tick={{ fontSize: 10 }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(v: number) => `$${v}T`}
+                />
+                <Tooltip
+                  content={({ active, payload, label }: any) => {
+                    if (!active || !payload) return null;
+                    const point = filteredData.find((d: any) => d.date === label);
+                    if (!point) return null;
+                    const total = point.realestate_mcap + point.bonds_mcap + point.equities_mcap + point.gold_mcap;
+                    const items = [
+                      { label: "Inmuebles", value: point.realestate_mcap, color: COLORS.purple },
+                      { label: "Bonos", value: point.bonds_mcap, color: COLORS.cyan },
+                      { label: "Acciones", value: point.equities_mcap, color: COLORS.blue },
+                      { label: "Oro", value: point.gold_mcap, color: COLORS.amber },
+                    ];
+                    return (
+                      <div
+                        className="rounded-lg px-4 py-3 text-xs"
+                        style={{
+                          background: "rgba(6,6,11,0.95)",
+                          border: "1px solid var(--border)",
+                          backdropFilter: "blur(10px)",
+                        }}
+                      >
+                        <p className="mb-2 font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
+                        {items.map((item) => (
+                          <div key={item.label} className="flex items-center gap-2 py-0.5">
+                            <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />
+                            <span style={{ color: "var(--text-muted)" }}>{item.label}:</span>
+                            <span className="font-medium tabular-nums" style={{ color: item.color }}>
+                              ${item.value.toFixed(1)}T
+                            </span>
+                          </div>
+                        ))}
+                        <div className="mt-1 pt-1" style={{ borderTop: "1px solid var(--border)" }}>
+                          <div className="flex items-center gap-2 py-0.5">
+                            <span style={{ color: "var(--text-muted)" }}>Total:</span>
+                            <span className="font-medium tabular-nums" style={{ color: "var(--text-primary)" }}>
+                              ${total.toFixed(1)}T
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="realestate_mcap"
+                  name="Inmuebles"
+                  stackId="1"
+                  stroke={COLORS.purple}
+                  fill="url(#gradREAbs)"
+                  strokeWidth={1.5}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="bonds_mcap"
+                  name="Bonos"
+                  stackId="1"
+                  stroke={COLORS.cyan}
+                  fill="url(#gradBondsAbs)"
+                  strokeWidth={1.5}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="equities_mcap"
+                  name="Acciones"
+                  stackId="1"
+                  stroke={COLORS.blue}
+                  fill="url(#gradEquitiesAbs)"
+                  strokeWidth={1.5}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="gold_mcap"
+                  name="Oro"
+                  stackId="1"
+                  stroke={COLORS.amber}
+                  fill="url(#gradGoldAbs)"
+                  strokeWidth={1.5}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+          <ChartLegend
+            items={[
+              { color: COLORS.purple, label: "Inmuebles" },
+              { color: COLORS.cyan, label: "Bonos" },
+              { color: COLORS.blue, label: "Acciones" },
+              { color: COLORS.amber, label: "Oro" },
+            ]}
+          />
+        </ChartSection>
+      </div>
+
+      {/* Wealth Distribution — Percentage */}
+      <div className="mt-6">
+        <ChartSection
+          title="El denominador se expande — ¿quién absorbe?"
+          subtitle="Distribución del market cap global por clase de activo. Cada dólar nuevo tiene que ir a algún lado."
           delay={5}
         >
           <div className="h-[300px]">
