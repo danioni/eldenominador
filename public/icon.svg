@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
     <filter id="neon">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur"/>
       <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0  0 0 0 0 1  0 0 0 0 0.53  0 0 0 1 0" result="green-blur"/>
       <feMerge>
         <feMergeNode in="green-blur"/>
@@ -12,15 +12,15 @@
   </defs>
 
   <!-- Dark background -->
-  <rect width="64" height="64" rx="14" fill="#06060b"/>
+  <rect width="512" height="512" rx="112" fill="#06060b"/>
 
   <!-- ÷ symbol with neon glow -->
   <g filter="url(#neon)">
     <!-- Top dot -->
-    <circle cx="32" cy="16" r="6" fill="#00ff88"/>
+    <circle cx="256" cy="128" r="48" fill="#00ff88"/>
     <!-- Bar -->
-    <rect x="11" y="28" width="42" height="8" rx="4" fill="#00ff88"/>
+    <rect x="88" y="224" width="336" height="64" rx="32" fill="#00ff88"/>
     <!-- Bottom dot -->
-    <circle cx="32" cy="48" r="6" fill="#00ff88"/>
+    <circle cx="256" cy="384" r="48" fill="#00ff88"/>
   </g>
 </svg>
