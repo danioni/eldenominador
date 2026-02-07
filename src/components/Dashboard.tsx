@@ -252,8 +252,8 @@ export default function Dashboard() {
 
       {/* Denominator Index - hero chart */}
       <ChartSection
-        title="Índice Denominador"
-        subtitle="Compuesto ponderado: 60% M2 Global + 40% Balance Bancos Centrales · Base 100 = 1913"
+        title="Tu dinero pierde valor cada día"
+        subtitle="Índice Denominador — compuesto ponderado: 60 % M2 Global + 40 % Balance Bancos Centrales · Base 100 = 1913"
         delay={3}
       >
         <div className="h-[320px]">
@@ -303,8 +303,8 @@ export default function Dashboard() {
       <div className="grid lg:grid-cols-2 gap-5 mt-6">
         {/* M2 Global */}
         <ChartSection
-          title="M2 — Oferta Monetaria"
-          subtitle="Agregado monetario M2 por región (trillones USD)"
+          title="La impresora no para"
+          subtitle="M2 — Oferta monetaria por región en trillones USD"
           delay={4}
         >
           <div className="h-[300px]">
@@ -367,7 +367,7 @@ export default function Dashboard() {
 
         {/* Central Bank Balance Sheets */}
         <ChartSection
-          title="Balance Bancos Centrales"
+          title="Los bancos centrales compran todo"
           subtitle="Hojas de balance de los 4 principales bancos centrales (trillones USD)"
           delay={5}
         >
@@ -433,8 +433,8 @@ export default function Dashboard() {
       {/* Net Liquidity - full width */}
       <div className="mt-6">
         <ChartSection
-          title="Liquidez Neta de la Fed"
-          subtitle="Fed Balance Sheet − TGA − RRP = Liquidez disponible real en el sistema (trillones USD)"
+          title="La liquidez real que mueve los mercados"
+          subtitle="Fed Balance Sheet − TGA − RRP = Liquidez neta disponible en el sistema (trillones USD)"
           delay={4}
         >
           <div className="h-[300px]">
@@ -505,7 +505,7 @@ export default function Dashboard() {
       {/* Assets vs Denominator Index */}
       <div className="mt-6">
         <ChartSection
-          title="Activos vs Denominador"
+          title="Nada le gana a la impresora"
           subtitle="Todos indexados a base 100 en 1913. El S&P 500 subió ~750x, el oro ~138x, pero el denominador ~3.400x. Las acciones capturan mejor la expansión, pero ninguna la alcanza."
           delay={5}
         >
@@ -631,7 +631,7 @@ export default function Dashboard() {
       {/* Wealth Market Cap — Absolute */}
       <div className="mt-6">
         <ChartSection
-          title="Riqueza global en trillones"
+          title="Todo sube, pero no por las razones que crees"
           subtitle="Market cap total por clase de activo en USD nominales. De $1T en 1913 a $721T en 2025 — el denominador en acción."
           delay={5}
         >
@@ -926,7 +926,7 @@ export default function Dashboard() {
       {/* M2 Global Aggregate */}
       <div className="mt-6">
         <ChartSection
-          title="M2 Global Agregado"
+          title="El denominador en una sola línea"
           subtitle="Suma total de oferta monetaria M2 de las principales economías (trillones USD)"
           delay={5}
         >
@@ -971,6 +971,101 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </div>
         </ChartSection>
+
+        {/* Sources */}
+        <div className="mt-16 fade-in-up">
+          <div className="divider-gradient mb-8" />
+          <h3
+            className="font-serif text-lg tracking-wide mb-6"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Fuentes
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+            <div>
+              <p className="uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)", fontSize: "10px" }}>
+                Masa Monetaria (M2)
+              </p>
+              <ul className="space-y-1">
+                <li>
+                  <a href="https://fred.stlouisfed.org/series/M2SL" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>FRED</a> — M2 Estados Unidos, Balance de la Fed, TGA, Reverse Repo
+                </li>
+                <li>
+                  <a href="https://www.ecb.europa.eu/stats/money_credit_banking/monetary_aggregates/html/index.en.html" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>BCE</a> — M2 Eurozona, Balance del BCE
+                </li>
+                <li>
+                  <a href="https://www.boj.or.jp/en/statistics/money/ms/index.htm" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>BoJ</a> — M2 Japón, Balance del BoJ
+                </li>
+                <li>
+                  <a href="http://www.pbc.gov.cn/en/3688006/3688007/3688015/index.html" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>PBoC</a> — M2 China, Balance del PBoC
+                </li>
+              </ul>
+
+              <p className="uppercase tracking-widest mb-2 mt-6" style={{ color: "var(--text-secondary)", fontSize: "10px" }}>
+                Oro
+              </p>
+              <ul className="space-y-1">
+                <li>
+                  <a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>World Gold Council</a> — Precio del oro, oferta total sobre tierra
+                </li>
+              </ul>
+
+              <p className="uppercase tracking-widest mb-2 mt-6" style={{ color: "var(--text-secondary)", fontSize: "10px" }}>
+                Bitcoin
+              </p>
+              <ul className="space-y-1">
+                <li>
+                  <a href="https://coinmarketcap.com/currencies/bitcoin/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>CoinMarketCap</a> — Capitalización de mercado de Bitcoin
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)", fontSize: "10px" }}>
+                Acciones
+              </p>
+              <ul className="space-y-1">
+                <li>
+                  <a href="https://data.worldbank.org/indicator/CM.MKT.LCAP.CD" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>World Bank</a> — Capitalización bursátil global
+                </li>
+                <li>
+                  <a href="https://siblisresearch.com/data/us-stock-market-value/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>Siblis Research</a> — Series históricas de mercados de valores
+                </li>
+              </ul>
+
+              <p className="uppercase tracking-widest mb-2 mt-6" style={{ color: "var(--text-secondary)", fontSize: "10px" }}>
+                Inmuebles
+              </p>
+              <ul className="space-y-1">
+                <li>
+                  <a href="https://www.savills.com/impacts/market-trends/the-total-value-of-global-real-estate.html" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>Savills</a> — Valor total del mercado inmobiliario global
+                </li>
+              </ul>
+
+              <p className="uppercase tracking-widest mb-2 mt-6" style={{ color: "var(--text-secondary)", fontSize: "10px" }}>
+                Bonos
+              </p>
+              <ul className="space-y-1">
+                <li>
+                  <a href="https://www.bis.org/statistics/secstats.htm" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>BIS</a> — Estadísticas de valores de deuda internacional
+                </li>
+                <li>
+                  <a href="https://www.sifma.org/resources/research/fact-book/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>SIFMA</a> — Mercados globales de renta fija
+                </li>
+              </ul>
+
+              <p className="uppercase tracking-widest mb-2 mt-6" style={{ color: "var(--text-secondary)", fontSize: "10px" }}>
+                Metodología
+              </p>
+              <p>
+                Datos históricos pre-1970 interpolados con crecimiento exponencial entre
+                puntos ancla verificados. Índice denominador: 60&nbsp;% M2 Global + 40&nbsp;%
+                Balances de Bancos Centrales, base 100&nbsp;=&nbsp;1913. Todos los valores
+                en trillones USD.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
