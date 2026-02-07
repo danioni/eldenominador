@@ -505,7 +505,7 @@ export default function Dashboard() {
       <div className="mt-6">
         <ChartSection
           title="Oro vs Denominador"
-          subtitle="Ambos indexados a base 100 en 1913. El oro subió ~138x. El denominador subió ~3.400x. La brecha es dinero impreso."
+          subtitle="Ambos indexados a base 100 en 1913. El oro subió ~138x. El denominador ~3.400x. La brecha es dilución que ni el oro capturó."
           delay={5}
         >
           <div className="h-[320px]">
