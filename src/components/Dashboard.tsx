@@ -9,18 +9,14 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LineChart,
   Line,
-  BarChart,
-  Bar,
   ComposedChart,
-  Legend,
 } from "recharts";
 import { liquidityData, getLatestMetrics } from "@/lib/data";
 import MetricCard from "./MetricCard";
 import ChartSection from "./ChartSection";
 
-type TimeRange = "1Y" | "3Y" | "ALL";
+type TimeRange = "10Y" | "25Y" | "50Y" | "ALL";
 
 const COLORS = {
   green: "#00ff88",
@@ -32,6 +28,12 @@ const COLORS = {
   cyan: "#00ddff",
   muted: "#55556a",
 };
+
+function formatValue(v: number): string {
+  if (v >= 1) return `$${v.toFixed(2)}T`;
+  if (v >= 0.001) return `$${(v * 1000).toFixed(1)}B`;
+  return `$${(v * 1000000).toFixed(0)}M`;
+}
 
 function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload) return null;
@@ -55,7 +57,7 @@ function CustomTooltip({ active, payload, label }: any) {
           />
           <span style={{ color: "var(--text-muted)" }}>{entry.name}:</span>
           <span className="font-medium tabular-nums" style={{ color: entry.color }}>
-            ${entry.value.toFixed(2)}T
+            {formatValue(entry.value)}
           </span>
         </div>
       ))}
@@ -100,18 +102,18 @@ function TimeRangeSelector({
   range: TimeRange;
   onChange: (r: TimeRange) => void;
 }) {
-  const options: TimeRange[] = ["1Y", "3Y", "ALL"];
+  const options: TimeRange[] = ["10Y", "25Y", "50Y", "ALL"];
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1 p-1 rounded-lg" style={{ background: "rgba(16, 16, 26, 0.6)", border: "1px solid var(--border-subtle)" }}>
       {options.map((opt) => (
         <button
           key={opt}
           onClick={() => onChange(opt)}
-          className="px-3 py-1 rounded text-[10px] tracking-wider uppercase transition-all"
+          className="px-3.5 py-1.5 rounded-md text-[10px] tracking-wider uppercase transition-all"
           style={{
             background:
               range === opt
-                ? "rgba(0,255,136,0.1)"
+                ? "rgba(0,255,136,0.12)"
                 : "transparent",
             color:
               range === opt
@@ -121,6 +123,10 @@ function TimeRangeSelector({
               range === opt
                 ? "1px solid rgba(0,255,136,0.2)"
                 : "1px solid transparent",
+            boxShadow:
+              range === opt
+                ? "0 0 12px rgba(0,255,136,0.06)"
+                : "none",
           }}
         >
           {opt}
@@ -130,26 +136,59 @@ function TimeRangeSelector({
   );
 }
 
+function ScaleToggle({ isLog, onToggle }: { isLog: boolean; onToggle: () => void }) {
+  return (
+    <button
+      onClick={onToggle}
+      className="px-3.5 py-1.5 rounded-md text-[10px] tracking-wider uppercase transition-all"
+      style={{
+        background: isLog ? "rgba(0,255,136,0.12)" : "transparent",
+        color: isLog ? "var(--accent-green)" : "var(--text-muted)",
+        border: isLog ? "1px solid rgba(0,255,136,0.2)" : "1px solid var(--border-subtle)",
+      }}
+    >
+      LOG
+    </button>
+  );
+}
+
 export default function Dashboard() {
   const [range, setRange] = useState<TimeRange>("ALL");
+  const [logScale, setLogScale] = useState(false);
   const metrics = useMemo(() => getLatestMetrics(), []);
 
   const filteredData = useMemo(() => {
-    const total = liquidityData.length;
-    if (range === "1Y") return liquidityData.slice(-12);
-    if (range === "3Y") return liquidityData.slice(-36);
-    return liquidityData;
+    if (range === "10Y") return liquidityData.slice(-10);
+    if (range === "25Y") return liquidityData.slice(-25);
+    if (range === "50Y") return liquidityData.slice(-50);
+    return liquidityData; // ALL: 1913-2025
   }, [range]);
 
-  // Thin out labels for x-axis
-  const tickInterval = range === "1Y" ? 1 : range === "3Y" ? 5 : 11;
+  // Build custom ticks for clean X axis labels
+  const xTicks = useMemo(() => {
+    const dates = filteredData.map(d => d.date);
+    const span = dates.length;
+    if (span <= 12) return undefined; // show all years
+    const yearStep = span <= 25 ? 5 : span <= 60 ? 10 : 20;
+    const firstYear = parseInt(dates[0]);
+    const lastYear = parseInt(dates[dates.length - 1]);
+    const startYear = Math.ceil(firstYear / yearStep) * yearStep;
+    const ticks: string[] = [];
+    for (let y = startYear; y <= lastYear; y += yearStep) {
+      const d = `${y}`;
+      if (dates.includes(d)) ticks.push(d);
+    }
+    if (!ticks.includes(dates[0])) ticks.unshift(dates[0]);
+    if (!ticks.includes(dates[dates.length - 1])) ticks.push(dates[dates.length - 1]);
+    return ticks;
+  }, [filteredData]);
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6 py-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
       {/* Thesis banner */}
-      <div className="mb-8 fade-in-up">
+      <div className="mb-12 fade-in-up pt-4">
         <p
-          className="font-serif text-3xl md:text-4xl leading-tight"
+          className="font-serif text-4xl md:text-5xl leading-[1.15] tracking-tight"
           style={{ color: "var(--text-primary)" }}
         >
           Los precios no suben.
@@ -159,22 +198,24 @@ export default function Dashboard() {
           </span>
         </p>
         <p
-          className="mt-3 text-sm max-w-2xl leading-relaxed"
+          className="mt-4 text-sm max-w-2xl leading-relaxed"
           style={{ color: "var(--text-secondary)" }}
         >
           Cada precio que ves es una fracción. El numerador es el activo.
           El denominador es la cantidad de unidades monetarias en circulación.
           Cuando el denominador crece, el número sube — pero el valor real no cambia.
         </p>
+        <div className="divider-gradient mt-8" />
       </div>
 
-      {/* Time range */}
-      <div className="flex justify-end mb-4">
+      {/* Time range + scale toggle */}
+      <div className="flex justify-end items-center gap-3 mb-6">
+        <ScaleToggle isLog={logScale} onToggle={() => setLogScale(!logScale)} />
         <TimeRangeSelector range={range} onChange={setRange} />
       </div>
 
       {/* Metrics row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
         <MetricCard
           label={metrics.m2Global.label}
           value={metrics.m2Global.value}
@@ -208,7 +249,7 @@ export default function Dashboard() {
       {/* Denominator Index - hero chart */}
       <ChartSection
         title="Índice Denominador"
-        subtitle="Compuesto ponderado: 60% M2 Global + 40% Balance Bancos Centrales · Base 100 = Enero 2020"
+        subtitle="Compuesto ponderado: 60% M2 Global + 40% Balance Bancos Centrales · Base 100 = 1913"
         delay={3}
       >
         <div className="h-[320px]">
@@ -225,7 +266,8 @@ export default function Dashboard() {
                 dataKey="date"
                 stroke="var(--text-muted)"
                 tick={{ fontSize: 10 }}
-                interval={tickInterval}
+                ticks={xTicks}
+
                 axisLine={false}
                 tickLine={false}
               />
@@ -234,7 +276,10 @@ export default function Dashboard() {
                 tick={{ fontSize: 10 }}
                 axisLine={false}
                 tickLine={false}
-                domain={["auto", "auto"]}
+                scale={logScale ? "log" : "auto"}
+                domain={logScale ? ["auto", "auto"] : ["auto", "auto"]}
+                allowDataOverflow={logScale}
+                tickFormatter={(v: number) => v >= 1000 ? `${(v / 1000).toFixed(0)}K` : `${v}`}
               />
               <Tooltip content={<DenominatorTooltip />} />
               <Area
@@ -251,7 +296,7 @@ export default function Dashboard() {
       </ChartSection>
 
       {/* Two column layout */}
-      <div className="grid lg:grid-cols-2 gap-4 mt-4">
+      <div className="grid lg:grid-cols-2 gap-5 mt-6">
         {/* M2 Global */}
         <ChartSection
           title="M2 — Oferta Monetaria"
@@ -284,7 +329,8 @@ export default function Dashboard() {
                   dataKey="date"
                   stroke="var(--text-muted)"
                   tick={{ fontSize: 10 }}
-                  interval={tickInterval}
+                  ticks={xTicks}
+  
                   axisLine={false}
                   tickLine={false}
                 />
@@ -293,6 +339,9 @@ export default function Dashboard() {
                   tick={{ fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
+                  scale={logScale ? "log" : "auto"}
+                  domain={logScale ? ["auto", "auto"] : [0, "auto"]}
+                  allowDataOverflow={logScale}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Area type="monotone" dataKey="m2_china" name="China" stroke={COLORS.red} fill="url(#gradChina)" strokeWidth={1.5} />
@@ -344,7 +393,8 @@ export default function Dashboard() {
                   dataKey="date"
                   stroke="var(--text-muted)"
                   tick={{ fontSize: 10 }}
-                  interval={tickInterval}
+                  ticks={xTicks}
+  
                   axisLine={false}
                   tickLine={false}
                 />
@@ -353,6 +403,9 @@ export default function Dashboard() {
                   tick={{ fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
+                  scale={logScale ? "log" : "auto"}
+                  domain={logScale ? ["auto", "auto"] : [0, "auto"]}
+                  allowDataOverflow={logScale}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Area type="monotone" dataKey="fed_bs" name="Fed" stroke={COLORS.blue} fill="url(#gradFed)" strokeWidth={1.5} />
@@ -374,7 +427,7 @@ export default function Dashboard() {
       </div>
 
       {/* Net Liquidity - full width */}
-      <div className="mt-4">
+      <div className="mt-6">
         <ChartSection
           title="Liquidez Neta de la Fed"
           subtitle="Fed Balance Sheet − TGA − RRP = Liquidez disponible real en el sistema (trillones USD)"
@@ -394,7 +447,8 @@ export default function Dashboard() {
                   dataKey="date"
                   stroke="var(--text-muted)"
                   tick={{ fontSize: 10 }}
-                  interval={tickInterval}
+                  ticks={xTicks}
+  
                   axisLine={false}
                   tickLine={false}
                 />
@@ -445,7 +499,7 @@ export default function Dashboard() {
       </div>
 
       {/* M2 Global Aggregate */}
-      <div className="mt-4">
+      <div className="mt-6">
         <ChartSection
           title="M2 Global Agregado"
           subtitle="Suma total de oferta monetaria M2 de las principales economías (trillones USD)"
@@ -465,7 +519,8 @@ export default function Dashboard() {
                   dataKey="date"
                   stroke="var(--text-muted)"
                   tick={{ fontSize: 10 }}
-                  interval={tickInterval}
+                  ticks={xTicks}
+  
                   axisLine={false}
                   tickLine={false}
                 />
@@ -474,6 +529,9 @@ export default function Dashboard() {
                   tick={{ fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
+                  scale={logScale ? "log" : "auto"}
+                  domain={logScale ? ["auto", "auto"] : [0, "auto"]}
+                  allowDataOverflow={logScale}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Area

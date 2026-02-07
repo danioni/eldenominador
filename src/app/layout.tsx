@@ -45,10 +45,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className="noise-overlay">
-        {children}
-        <Analytics />
-      </body>
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="noise-overlay">{children}</body>
     </html>
   );
 }

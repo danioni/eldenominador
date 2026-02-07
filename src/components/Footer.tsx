@@ -2,18 +2,27 @@
 
 export default function Footer() {
   return (
-    <footer
-      className="border-t mt-16 py-8 px-6"
-      style={{ borderColor: "var(--border)" }}
-    >
-      <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <span
-            className="text-lg font-bold"
-            style={{ color: "var(--accent-green)" }}
+    <footer className="relative mt-16">
+      {/* Top gradient line */}
+      <div
+        className="h-[1px]"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(0,255,136,0.15) 50%, transparent)",
+        }}
+      />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold"
+            style={{
+              background: "rgba(0,255,136,0.06)",
+              border: "1px solid rgba(0,255,136,0.1)",
+              color: "var(--accent-green)",
+            }}
           >
             ÷
-          </span>
+          </div>
           <span
             className="text-[11px] tracking-wider"
             style={{ color: "var(--text-muted)" }}
@@ -27,12 +36,12 @@ export default function Footer() {
             href="https://elfaro.capital"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] tracking-wider uppercase transition-colors hover:opacity-80"
+            className="text-[10px] tracking-wider uppercase transition-opacity hover:opacity-80"
             style={{ color: "var(--text-muted)" }}
           >
             El Faro Capital
           </a>
-          <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+          <span className="text-[10px] tabular-nums" style={{ color: "var(--text-muted)" }}>
             {new Date().getFullYear()}
           </span>
         </div>
