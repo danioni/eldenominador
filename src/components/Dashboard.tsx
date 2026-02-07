@@ -627,24 +627,32 @@ export default function Dashboard() {
         </ChartSection>
       </div>
 
-      {/* Gold Capture vs Gap */}
+      {/* Wealth Distribution by Asset Class */}
       <div className="mt-6">
         <ChartSection
-          title="¿Cuánto capturó el oro?"
-          subtitle="Porcentaje de la expansión monetaria que el oro absorbió vs lo que fue a parar a otros activos: inmuebles, acciones, bonos y deuda soberana."
+          title="¿A dónde fue la riqueza?"
+          subtitle="Distribución del market cap global entre clases de activos. Inmuebles dominan, pero las acciones ganan terreno década a década."
           delay={5}
         >
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={filteredData} stackOffset="expand">
                 <defs>
-                  <linearGradient id="gradCapture" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={COLORS.amber} stopOpacity={0.4} />
+                  <linearGradient id="gradGold" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.amber} stopOpacity={0.5} />
                     <stop offset="100%" stopColor={COLORS.amber} stopOpacity={0.1} />
                   </linearGradient>
-                  <linearGradient id="gradGap" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={COLORS.red} stopOpacity={0.15} />
-                    <stop offset="100%" stopColor={COLORS.red} stopOpacity={0.05} />
+                  <linearGradient id="gradEquities" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.blue} stopOpacity={0.5} />
+                    <stop offset="100%" stopColor={COLORS.blue} stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="gradRE" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.purple} stopOpacity={0.4} />
+                    <stop offset="100%" stopColor={COLORS.purple} stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="gradBonds" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={COLORS.cyan} stopOpacity={0.4} />
+                    <stop offset="100%" stopColor={COLORS.cyan} stopOpacity={0.1} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
@@ -667,6 +675,13 @@ export default function Dashboard() {
                   content={({ active, payload, label }: any) => {
                     if (!active || !payload) return null;
                     const point = filteredData.find((d: any) => d.date === label);
+                    if (!point) return null;
+                    const items = [
+                      { label: "Inmuebles", value: point.realestate_wealth_pct, color: COLORS.purple },
+                      { label: "Bonos", value: point.bonds_wealth_pct, color: COLORS.cyan },
+                      { label: "Acciones", value: point.equities_wealth_pct, color: COLORS.blue },
+                      { label: "Oro", value: point.gold_wealth_pct, color: COLORS.amber },
+                    ];
                     return (
                       <div
                         className="rounded-lg px-4 py-3 text-xs"
@@ -677,44 +692,53 @@ export default function Dashboard() {
                         }}
                       >
                         <p className="mb-2 font-medium" style={{ color: "var(--text-secondary)" }}>{label}</p>
-                        {point && (
-                          <>
-                            <div className="flex items-center gap-2 py-0.5">
-                              <div className="w-2 h-2 rounded-full" style={{ background: COLORS.amber }} />
-                              <span style={{ color: "var(--text-muted)" }}>Oro capturó:</span>
-                              <span className="font-medium tabular-nums" style={{ color: COLORS.amber }}>
-                                {point.gold_capture_pct.toFixed(1)}%
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2 py-0.5">
-                              <div className="w-2 h-2 rounded-full" style={{ background: COLORS.red }} />
-                              <span style={{ color: "var(--text-muted)" }}>Otros activos:</span>
-                              <span className="font-medium tabular-nums" style={{ color: COLORS.red }}>
-                                {point.gold_gap_pct.toFixed(1)}%
-                              </span>
-                            </div>
-                          </>
-                        )}
+                        {items.map((item) => (
+                          <div key={item.label} className="flex items-center gap-2 py-0.5">
+                            <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />
+                            <span style={{ color: "var(--text-muted)" }}>{item.label}:</span>
+                            <span className="font-medium tabular-nums" style={{ color: item.color }}>
+                              {item.value.toFixed(1)}%
+                            </span>
+                          </div>
+                        ))}
                       </div>
                     );
                   }}
                 />
                 <Area
                   type="monotone"
-                  dataKey="gold_capture_pct"
-                  name="Oro capturó"
+                  dataKey="realestate_wealth_pct"
+                  name="Inmuebles"
                   stackId="1"
-                  stroke={COLORS.amber}
-                  fill="url(#gradCapture)"
+                  stroke={COLORS.purple}
+                  fill="url(#gradRE)"
                   strokeWidth={1.5}
                 />
                 <Area
                   type="monotone"
-                  dataKey="gold_gap_pct"
-                  name="Otros activos"
+                  dataKey="bonds_wealth_pct"
+                  name="Bonos"
                   stackId="1"
-                  stroke={COLORS.red}
-                  fill="url(#gradGap)"
+                  stroke={COLORS.cyan}
+                  fill="url(#gradBonds)"
+                  strokeWidth={1.5}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="equities_wealth_pct"
+                  name="Acciones"
+                  stackId="1"
+                  stroke={COLORS.blue}
+                  fill="url(#gradEquities)"
+                  strokeWidth={1.5}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="gold_wealth_pct"
+                  name="Oro"
+                  stackId="1"
+                  stroke={COLORS.amber}
+                  fill="url(#gradGold)"
                   strokeWidth={1.5}
                 />
               </AreaChart>
@@ -722,8 +746,10 @@ export default function Dashboard() {
           </div>
           <ChartLegend
             items={[
-              { color: COLORS.amber, label: "Capturado por el oro" },
-              { color: COLORS.red, label: "Inmuebles, acciones, bonos" },
+              { color: COLORS.purple, label: "Inmuebles" },
+              { color: COLORS.cyan, label: "Bonos" },
+              { color: COLORS.blue, label: "Acciones" },
+              { color: COLORS.amber, label: "Oro" },
             ]}
           />
         </ChartSection>
