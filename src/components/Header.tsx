@@ -12,15 +12,31 @@ export default function Header() {
         {/* Logo */}
         <div className="flex items-center gap-4">
           <div
-            className="w-11 h-11 rounded-xl flex items-center justify-center text-xl font-bold"
+            className="w-11 h-11 rounded-xl flex items-center justify-center"
             style={{
               background: "linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,255,136,0.03))",
               border: "1px solid rgba(0,255,136,0.2)",
-              color: "var(--accent-green)",
               boxShadow: "0 0 24px rgba(0, 255, 136, 0.08)",
             }}
           >
-            ÷
+            <svg viewBox="0 0 64 64" className="w-6 h-6">
+              <defs>
+                <filter id="header-neon">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+                  <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0  0 0 0 0 1  0 0 0 0 0.53  0 0 0 1 0" result="green-blur"/>
+                  <feMerge>
+                    <feMergeNode in="green-blur"/>
+                    <feMergeNode in="green-blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <g filter="url(#header-neon)">
+                <circle cx="32" cy="16" r="6" fill="#00ff88"/>
+                <rect x="11" y="28" width="42" height="8" rx="4" fill="#00ff88"/>
+                <circle cx="32" cy="48" r="6" fill="#00ff88"/>
+              </g>
+            </svg>
           </div>
           <div>
             <h1 className="font-serif text-xl tracking-wide" style={{ color: "var(--text-primary)" }}>
