@@ -56,18 +56,18 @@ export default function Header() {
         background: "linear-gradient(180deg, var(--ambient-glow) 0%, transparent 100%)",
       }}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 flex items-center justify-between gap-3">
         {/* Logo */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
           <div
-            className="w-11 h-11 rounded-xl flex items-center justify-center"
+            className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shrink-0"
             style={{
               background: "var(--accent-green-bg)",
               border: "1px solid var(--accent-green-border-active)",
               boxShadow: "var(--accent-green-glow)",
             }}
           >
-            <svg viewBox="0 0 64 64" className="w-6 h-6">
+            <svg viewBox="0 0 64 64" className="w-5 h-5 sm:w-6 sm:h-6">
               <defs>
                 <filter id="header-neon">
                   <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
@@ -86,20 +86,20 @@ export default function Header() {
               </g>
             </svg>
           </div>
-          <div>
-            <h1 className="font-serif text-xl tracking-wide" style={{ color: "var(--text-primary)" }}>
+          <div className="min-w-0">
+            <h1 className="font-serif text-lg sm:text-xl tracking-wide truncate" style={{ color: "var(--text-primary)" }}>
               El Denominador
             </h1>
-            <p className="text-[10px] tracking-[0.2em] uppercase mt-0.5" style={{ color: "var(--text-muted)" }}>
+            <p className="text-[9px] sm:text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>
               Observatorio de Liquidez Global
             </p>
           </div>
         </div>
 
         {/* Live indicator + theme toggle */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <div
-            className="label-badge"
+            className="label-badge hidden sm:inline-flex"
           >
             <div
               className="w-1.5 h-1.5 rounded-full pulse-dot"
@@ -107,6 +107,17 @@ export default function Header() {
             />
             <span className="text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
               Datos actualizados
+            </span>
+          </div>
+          <div
+            className="label-badge sm:hidden"
+          >
+            <div
+              className="w-1.5 h-1.5 rounded-full pulse-dot"
+              style={{ background: "var(--accent-green)" }}
+            />
+            <span className="text-[9px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
+              Live
             </span>
           </div>
           <ThemeToggle />

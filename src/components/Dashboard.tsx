@@ -139,7 +139,7 @@ function TimeRangeSelector({
         <button
           key={opt}
           onClick={() => onChange(opt)}
-          className="px-3.5 py-1.5 rounded-md text-[10px] tracking-wider uppercase transition-all"
+          className="px-2.5 sm:px-3.5 py-1.5 rounded-md text-[9px] sm:text-[10px] tracking-wider uppercase transition-all"
           style={{
             background:
               range === opt
@@ -215,11 +215,11 @@ export default function Dashboard() {
   }, [filteredData]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
       {/* Thesis banner */}
-      <div className="mb-12 fade-in-up pt-4">
+      <div className="mb-8 sm:mb-12 fade-in-up pt-4">
         <p
-          className="font-serif text-4xl md:text-5xl leading-[1.15] tracking-tight"
+          className="font-serif text-3xl sm:text-4xl md:text-5xl leading-[1.15] tracking-tight"
           style={{ color: "var(--text-primary)" }}
         >
           Los precios no suben.
@@ -229,7 +229,7 @@ export default function Dashboard() {
           </span>
         </p>
         <p
-          className="mt-4 text-sm max-w-2xl leading-relaxed"
+          className="mt-3 sm:mt-4 text-xs sm:text-sm max-w-2xl leading-relaxed"
           style={{ color: "var(--text-secondary)" }}
         >
           Todo precio es una fracción. El denominador es la masa monetaria
@@ -239,17 +239,17 @@ export default function Dashboard() {
           sino el tamaño de la unidad con la que se miden. Quienes entienden
           esto lo explotan. Quienes no, lo padecen.
         </p>
-        <div className="divider-gradient mt-8" />
+        <div className="divider-gradient mt-6 sm:mt-8" />
       </div>
 
       {/* Time range + scale toggle */}
-      <div className="flex justify-end items-center gap-3 mb-6">
+      <div className="flex justify-end items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
         <ScaleToggle isLog={logScale} onToggle={() => setLogScale(!logScale)} />
         <TimeRangeSelector range={range} onChange={setRange} />
       </div>
 
       {/* Metrics row */}
-      <div className="grid grid-cols-3 gap-5 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 mb-10">
         <MetricCard
           label={metrics.m2Global.label}
           value={metrics.m2Global.value}
@@ -279,7 +279,7 @@ export default function Dashboard() {
         subtitle="Compuesto ponderado: 60 % M2 Global + 40 % Balance Bancos Centrales · Base 100 = 1913"
         delay={3}
       >
-        <div className="h-[320px]">
+        <div className="h-[250px] sm:h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={filteredData}>
               <defs>
@@ -323,14 +323,14 @@ export default function Dashboard() {
       </ChartSection>
 
       {/* Two column layout */}
-      <div className="grid lg:grid-cols-2 gap-5 mt-6">
+      <div className="grid lg:grid-cols-2 gap-4 sm:gap-5 mt-4 sm:mt-6">
         {/* M2 Global */}
         <ChartSection
           title="Oferta Monetaria M2 — La impresora no para"
           subtitle="Agregado monetario M2 por región (trillones USD)"
           delay={4}
         >
-          <div className="h-[300px]">
+          <div className="h-[220px] sm:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={filteredData}>
                 <defs>
@@ -394,7 +394,7 @@ export default function Dashboard() {
           subtitle="Hojas de balance de los 4 principales bancos centrales (trillones USD)"
           delay={5}
         >
-          <div className="h-[300px]">
+          <div className="h-[220px] sm:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={filteredData}>
                 <defs>
@@ -454,13 +454,13 @@ export default function Dashboard() {
       </div>
 
       {/* Assets vs Denominator Index */}
-      <div className="mt-6">
+      <div className="mt-4 sm:mt-6">
         <ChartSection
           title="Activos vs Denominador — Nada le gana a la impresora"
           subtitle="Todos indexados a base 100 en 1913. El S&P 500 subió ~750x, el oro ~138x, pero el denominador ~3.400x. Las acciones capturan mejor la expansión, pero ninguna la alcanza."
           delay={5}
         >
-          <div className="h-[320px]">
+          <div className="h-[250px] sm:h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={filteredData}>
                 <defs>
@@ -580,13 +580,13 @@ export default function Dashboard() {
       </div>
 
       {/* Wealth Market Cap — Absolute */}
-      <div className="mt-6">
+      <div className="mt-4 sm:mt-6">
         <ChartSection
           title="Riqueza Global — Más activos, más unidades, más denominador"
           subtitle="Capitalización total por clase de activo en USD nominales. El crecimiento refleja tanto creación de riqueza real como dilución monetaria: más casas, más empresas, más deuda, pero también más unidades para contarlas."
           delay={5}
         >
-          <div className="h-[300px]">
+          <div className="h-[220px] sm:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={filteredData}>
                 <defs>
@@ -732,13 +732,13 @@ export default function Dashboard() {
       </div>
 
       {/* Wealth Distribution — Percentage */}
-      <div className="mt-6">
+      <div className="mt-4 sm:mt-6">
         <ChartSection
           title="Distribución de Riqueza — El denominador se expande, ¿quién absorbe más?"
           subtitle="Distribución de la capitalización global por clase de activo. Cada dólar nuevo tiene que ir a algún lado."
           delay={5}
         >
-          <div className="h-[300px]">
+          <div className="h-[220px] sm:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={filteredData} stackOffset="expand">
                 <defs>
@@ -875,13 +875,13 @@ export default function Dashboard() {
       </div>
 
       {/* M2 Global Aggregate */}
-      <div className="mt-6">
+      <div className="mt-4 sm:mt-6">
         <ChartSection
           title="M2 Global — El denominador en una sola línea"
           subtitle="Suma total de oferta monetaria M2 de las principales economías (trillones USD)"
           delay={5}
         >
-          <div className="h-[280px]">
+          <div className="h-[220px] sm:h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={filteredData}>
                 <defs>
@@ -924,10 +924,10 @@ export default function Dashboard() {
         </ChartSection>
 
         {/* Closing message */}
-        <div className="mt-16 mb-16 fade-in-up text-center">
-          <div className="divider-gradient mb-8" />
+        <div className="mt-10 mb-10 sm:mt-16 sm:mb-16 fade-in-up text-center">
+          <div className="divider-gradient mb-6 sm:mb-8" />
           <p
-            className="font-serif text-3xl md:text-4xl leading-tight tracking-tight"
+            className="font-serif text-2xl sm:text-3xl md:text-4xl leading-tight tracking-tight"
             style={{ color: "var(--text-primary)" }}
           >
             ¿Quién dijo que el dinero era{" "}
@@ -936,11 +936,11 @@ export default function Dashboard() {
             </span>
             ?
           </p>
-          <div className="divider-gradient mt-8" />
+          <div className="divider-gradient mt-6 sm:mt-8" />
         </div>
 
         {/* Sources */}
-        <div className="mt-16 fade-in-up">
+        <div className="mt-10 sm:mt-16 fade-in-up">
           <div className="divider-gradient mb-8" />
           <h3
             className="font-serif text-lg tracking-wide mb-6"

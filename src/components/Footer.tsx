@@ -49,6 +49,15 @@ export default function Footer() {
 
         <div className="flex items-center gap-6">
           <a
+            href="https://elnumerador.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] tracking-wider uppercase transition-opacity hover:opacity-80"
+            style={{ color: "var(--text-muted)" }}
+          >
+            El Numerador
+          </a>
+          <a
             href="https://elfaro.capital"
             target="_blank"
             rel="noopener noreferrer"
