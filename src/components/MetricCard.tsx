@@ -21,7 +21,7 @@ function formatChangeValue(change: number): string {
 
 export default function MetricCard({ label, value, change, unit, delay = 0 }: MetricCardProps) {
   const isPositive = change >= 0;
-  const changeColor = isPositive ? "var(--accent-green)" : "var(--accent-red)";
+  const changeColor = isPositive ? "var(--accent)" : "var(--accent-red)";
   const arrow = isPositive ? "\u2191" : "\u2193";
 
   return (
@@ -34,7 +34,7 @@ export default function MetricCard({ label, value, change, unit, delay = 0 }: Me
       >
         <span
           className="w-1 h-1 rounded-full inline-block"
-          style={{ background: isPositive ? "var(--accent-green)" : "var(--accent-red)" }}
+          style={{ background: isPositive ? "var(--accent)" : "var(--accent-red)" }}
         />
         {label}
       </p>
@@ -59,7 +59,7 @@ export default function MetricCard({ label, value, change, unit, delay = 0 }: Me
           className="text-xs font-medium tabular-nums px-1.5 py-0.5 rounded"
           style={{
             color: changeColor,
-            background: isPositive ? "var(--accent-green-bg)" : "var(--accent-red-bg)",
+            background: isPositive ? "var(--accent-bg)" : "var(--accent-red-bg)",
           }}
         >
           {arrow} {formatChangeValue(change)}

@@ -143,19 +143,19 @@ function TimeRangeSelector({
           style={{
             background:
               range === opt
-                ? "var(--accent-green-bg-active)"
+                ? "var(--accent-bg-active)"
                 : "transparent",
             color:
               range === opt
-                ? "var(--accent-green)"
+                ? "var(--accent)"
                 : "var(--text-muted)",
             border:
               range === opt
-                ? "1px solid var(--accent-green-border-active)"
+                ? "1px solid var(--accent-border-active)"
                 : "1px solid transparent",
             boxShadow:
               range === opt
-                ? "var(--accent-green-glow)"
+                ? "var(--accent-glow)"
                 : "none",
           }}
         >
@@ -172,9 +172,9 @@ function ScaleToggle({ isLog, onToggle }: { isLog: boolean; onToggle: () => void
       onClick={onToggle}
       className="px-3.5 py-1.5 rounded-md text-[10px] tracking-wider uppercase transition-all"
       style={{
-        background: isLog ? "var(--accent-green-bg-active)" : "transparent",
-        color: isLog ? "var(--accent-green)" : "var(--text-muted)",
-        border: isLog ? "1px solid var(--accent-green-border-active)" : "1px solid var(--border-subtle)",
+        background: isLog ? "var(--accent-bg-active)" : "transparent",
+        color: isLog ? "var(--accent)" : "var(--text-muted)",
+        border: isLog ? "1px solid var(--accent-border-active)" : "1px solid var(--border-subtle)",
       }}
     >
       LOG
@@ -224,7 +224,7 @@ export default function Dashboard() {
         >
           Los precios no suben.
           <br />
-          <span className="glow-green" style={{ color: "var(--accent-green)" }}>
+          <span className="glow-accent" style={{ color: "var(--accent)" }}>
             El dinero se encoge.
           </span>
         </p>
@@ -240,6 +240,41 @@ export default function Dashboard() {
           esto lo explotan. Quienes no, lo padecen.
         </p>
         <div className="divider-gradient mt-6 sm:mt-8" />
+      </div>
+
+      {/* ¿Qué es el denominador? */}
+      <div className="mb-10 sm:mb-14 fade-in-up fade-in-up-2">
+        <h2 className="font-serif text-xl sm:text-2xl mb-4" style={{ color: "var(--text-primary)" }}>
+          ¿Qué es el denominador?
+        </h2>
+        <div className="card-glass rounded-xl p-6 sm:p-8">
+          <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
+            {/* Animated fraction */}
+            <div className="text-center shrink-0">
+              <div className="text-sm tracking-wider uppercase mb-2" style={{ color: "var(--text-muted)" }}>
+                Precio
+              </div>
+              <div className="relative">
+                <div className="text-xl sm:text-2xl font-light" style={{ color: "var(--text-primary)" }}>
+                  Lo que compras
+                </div>
+                <div className="h-[2px] my-2" style={{ background: "var(--accent)" }} />
+                <div className="text-xl sm:text-2xl font-light glow-accent" style={{ color: "var(--accent)" }}>
+                  La moneda &larr;
+                </div>
+              </div>
+            </div>
+            {/* Explanation */}
+            <div className="text-xs sm:text-sm leading-relaxed max-w-xl" style={{ color: "var(--text-secondary)" }}>
+              <p className="mb-3">
+                Cuando dices &ldquo;el pan subió,&rdquo; estás asumiendo que el denominador es fijo. Pero no lo es. La moneda con la que mides se devalúa cada año. Los bancos centrales crean dinero, los gobiernos gastan más de lo que tienen, y cada nueva unidad diluye las que ya existían.
+              </p>
+              <p>
+                Entre 2000 y 2025, el M2 global pasó de $13T a $93T &mdash; se multiplicó por 7. Si el denominador crece 7x, y el precio &ldquo;solo&rdquo; sube 3x, el bien en realidad se abarató. La ilusión monetaria te hace ver subidas donde hay destrucción.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Time range + scale toggle */}
@@ -931,12 +966,38 @@ export default function Dashboard() {
             style={{ color: "var(--text-primary)" }}
           >
             ¿Quién dijo que el dinero era{" "}
-            <span className="glow-green" style={{ color: "var(--accent-green)" }}>
+            <span className="glow-accent" style={{ color: "var(--accent)" }}>
               escaso
             </span>
             ?
           </p>
           <div className="divider-gradient mt-6 sm:mt-8" />
+        </div>
+
+        {/* CTA to El Numerador */}
+        <div className="mt-12 sm:mt-16 text-center fade-in-up">
+          <div className="card-glass rounded-xl p-8 sm:p-12 max-w-2xl mx-auto">
+            <p className="font-serif text-lg sm:text-xl mb-3" style={{ color: "var(--text-primary)" }}>
+              Si el denominador se encoge, ¿qué puedes hacer?
+            </p>
+            <p className="text-xs sm:text-sm mb-6 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              Acumula activos en el numerador que el sistema no pueda diluir. Empieza por entender qué activos protegen tu poder adquisitivo.
+            </p>
+            <a
+              href="https://elnumerador.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-all hover:scale-[1.02]"
+              style={{
+                background: "var(--accent-bg-active)",
+                border: "1px solid var(--accent-border-active)",
+                color: "var(--accent)",
+              }}
+            >
+              Entiende el numerador
+              <span>→</span>
+            </a>
+          </div>
         </div>
 
         {/* Sources */}
@@ -955,16 +1016,16 @@ export default function Dashboard() {
               </p>
               <ul className="space-y-1">
                 <li>
-                  <a href="https://fred.stlouisfed.org/series/M2SL" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>FRED</a> — M2 Estados Unidos, Balance de la Fed
+                  <a href="https://fred.stlouisfed.org/series/M2SL" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>FRED</a> — M2 Estados Unidos, Balance de la Fed
                 </li>
                 <li>
-                  <a href="https://www.ecb.europa.eu/stats/money_credit_banking/monetary_aggregates/html/index.en.html" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>BCE</a> — M2 Eurozona, Balance del BCE
+                  <a href="https://www.ecb.europa.eu/stats/money_credit_banking/monetary_aggregates/html/index.en.html" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>BCE</a> — M2 Eurozona, Balance del BCE
                 </li>
                 <li>
-                  <a href="https://www.boj.or.jp/en/statistics/money/ms/index.htm" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>BoJ</a> — M2 Japón, Balance del BoJ
+                  <a href="https://www.boj.or.jp/en/statistics/money/ms/index.htm" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>BoJ</a> — M2 Japón, Balance del BoJ
                 </li>
                 <li>
-                  <a href="http://www.pbc.gov.cn/en/3688006/3688007/3688015/index.html" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>PBoC</a> — M2 China, Balance del PBoC
+                  <a href="http://www.pbc.gov.cn/en/3688006/3688007/3688015/index.html" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>PBoC</a> — M2 China, Balance del PBoC
                 </li>
               </ul>
 
@@ -973,7 +1034,7 @@ export default function Dashboard() {
               </p>
               <ul className="space-y-1">
                 <li>
-                  <a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>World Gold Council</a> — Precio del oro, oferta total sobre tierra
+                  <a href="https://www.gold.org/goldhub/data/gold-prices" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>World Gold Council</a> — Precio del oro, oferta total sobre tierra
                 </li>
               </ul>
 
@@ -982,7 +1043,7 @@ export default function Dashboard() {
               </p>
               <ul className="space-y-1">
                 <li>
-                  <a href="https://coinmarketcap.com/currencies/bitcoin/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>CoinMarketCap</a> — Capitalización de mercado de Bitcoin
+                  <a href="https://coinmarketcap.com/currencies/bitcoin/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>CoinMarketCap</a> — Capitalización de mercado de Bitcoin
                 </li>
               </ul>
             </div>
@@ -993,10 +1054,10 @@ export default function Dashboard() {
               </p>
               <ul className="space-y-1">
                 <li>
-                  <a href="https://data.worldbank.org/indicator/CM.MKT.LCAP.CD" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>World Bank</a> — Capitalización bursátil global
+                  <a href="https://data.worldbank.org/indicator/CM.MKT.LCAP.CD" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>World Bank</a> — Capitalización bursátil global
                 </li>
                 <li>
-                  <a href="https://siblisresearch.com/data/us-stock-market-value/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>Siblis Research</a> — Series históricas de mercados de valores
+                  <a href="https://siblisresearch.com/data/us-stock-market-value/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>Siblis Research</a> — Series históricas de mercados de valores
                 </li>
               </ul>
 
@@ -1005,7 +1066,7 @@ export default function Dashboard() {
               </p>
               <ul className="space-y-1">
                 <li>
-                  <a href="https://www.savills.com/impacts/market-trends/the-total-value-of-global-real-estate.html" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>Savills</a> — Valor total del mercado inmobiliario global
+                  <a href="https://www.savills.com/impacts/market-trends/the-total-value-of-global-real-estate.html" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>Savills</a> — Valor total del mercado inmobiliario global
                 </li>
               </ul>
 
@@ -1014,10 +1075,10 @@ export default function Dashboard() {
               </p>
               <ul className="space-y-1">
                 <li>
-                  <a href="https://www.bis.org/statistics/secstats.htm" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>BIS</a> — Estadísticas de valores de deuda internacional
+                  <a href="https://www.bis.org/statistics/secstats.htm" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>BIS</a> — Estadísticas de valores de deuda internacional
                 </li>
                 <li>
-                  <a href="https://www.sifma.org/resources/research/fact-book/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent-green)" }}>SIFMA</a> — Mercados globales de renta fija
+                  <a href="https://www.sifma.org/resources/research/fact-book/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>SIFMA</a> — Mercados globales de renta fija
                 </li>
               </ul>
 
