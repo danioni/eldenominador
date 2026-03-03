@@ -110,22 +110,13 @@ export default function Header() {
             }}
           >
             <svg viewBox="0 0 64 64" className="w-5 h-5 sm:w-6 sm:h-6">
-              <defs>
-                <filter id="header-neon">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
-                  <feColorMatrix in="blur" type="matrix" values="0 0 0 0 1  0 0 0 0 0.27  0 0 0 0 0.2  0 0 0 1 0" result="red-blur"/>
-                  <feMerge>
-                    <feMergeNode in="red-blur"/>
-                    <feMergeNode in="red-blur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-              </defs>
-              <g filter="url(#header-neon)">
-                <circle cx="32" cy="16" r="6" fill="#ff4433"/>
-                <rect x="11" y="28" width="42" height="8" rx="4" fill="#ff4433"/>
-                <circle cx="32" cy="48" r="6" fill="#ff4433"/>
-              </g>
+              {/* Shrinking ruler — tapered body with compressing tick marks */}
+              <path d="M7,18 L57,25 L57,39 L7,46 Z" fill="#ff4433"/>
+              <line x1="15" y1="19.2" x2="15" y2="34" stroke="#fff" strokeWidth="3" strokeLinecap="round" opacity="0.92"/>
+              <line x1="27" y1="21" x2="27" y2="33" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" opacity="0.70"/>
+              <line x1="37" y1="22.4" x2="37" y2="32.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity="0.48"/>
+              <line x1="45" y1="23.5" x2="45" y2="32" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" opacity="0.32"/>
+              <line x1="51" y1="24.4" x2="51" y2="31" stroke="#fff" strokeWidth="1" strokeLinecap="round" opacity="0.18"/>
             </svg>
           </div>
           <div className="min-w-0">

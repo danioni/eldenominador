@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <filter id="neon">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur"/>
-      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0  0 0 0 0 1  0 0 0 0 0.53  0 0 0 1 0" result="green-blur"/>
+    <filter id="glow">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
+      <feColorMatrix in="blur" type="matrix"
+        values="0 0 0 0 1  0 0 0 0 0.27  0 0 0 0 0.2  0 0 0 0.55 0" result="red-blur"/>
       <feMerge>
-        <feMergeNode in="green-blur"/>
-        <feMergeNode in="green-blur"/>
+        <feMergeNode in="red-blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
@@ -14,13 +14,22 @@
   <!-- Dark background -->
   <rect width="512" height="512" rx="112" fill="#06060b"/>
 
-  <!-- ÷ symbol with neon glow -->
-  <g filter="url(#neon)">
-    <!-- Top dot -->
-    <circle cx="256" cy="128" r="48" fill="#00ff88"/>
-    <!-- Bar -->
-    <rect x="88" y="224" width="336" height="64" rx="32" fill="#00ff88"/>
-    <!-- Bottom dot -->
-    <circle cx="256" cy="384" r="48" fill="#00ff88"/>
+  <!-- Tapered ruler with compressing tick marks -->
+  <g filter="url(#glow)">
+    <!-- Ruler body — tapers from left (full) to right (shrunken) -->
+    <path d="M56,144 L456,200 L456,312 L56,368 Z" fill="#ff4433"/>
+
+    <!-- Major tick marks — spacing compresses, opacity fades -->
+    <line x1="120" y1="153" x2="120" y2="272" stroke="#fff" stroke-width="20" stroke-linecap="round" opacity="0.92"/>
+    <line x1="216" y1="166" x2="216" y2="266" stroke="#fff" stroke-width="16" stroke-linecap="round" opacity="0.70"/>
+    <line x1="296" y1="177" x2="296" y2="260" stroke="#fff" stroke-width="13" stroke-linecap="round" opacity="0.48"/>
+    <line x1="360" y1="186" x2="360" y2="254" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity="0.32"/>
+    <line x1="408" y1="193" x2="408" y2="248" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity="0.18"/>
+
+    <!-- Minor tick marks — shorter, thinner, between majors -->
+    <line x1="168" y1="160" x2="168" y2="230" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity="0.45"/>
+    <line x1="256" y1="172" x2="256" y2="228" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0.30"/>
+    <line x1="328" y1="181" x2="328" y2="225" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity="0.20"/>
+    <line x1="384" y1="189" x2="384" y2="220" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity="0.12"/>
   </g>
 </svg>
