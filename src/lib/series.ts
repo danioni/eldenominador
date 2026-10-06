@@ -113,6 +113,8 @@ export interface Ratio {
   mesesEnDisputa: number;
   puntos: PuntoRatio[];
   ultimo: PuntoRatio;
+  /** Variación contra el mismo mes del año anterior, en %. Cálculo propio; null si no hay dato 12 meses atrás. */
+  interanualPct: number | null;
 }
 
 export interface Cita {
@@ -390,6 +392,7 @@ export function cargarDatos(dir: string = DIR_SERIES, rutaLock: string = RUTA_LO
         mesesEnDisputa: entero(p.meses_en_disputa, c),
         puntos,
         ultimo: puntos[puntos.length - 1],
+        interanualPct: interanual(puntos),
       };
     });
 

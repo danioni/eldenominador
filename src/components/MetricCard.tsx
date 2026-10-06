@@ -1,73 +1,89 @@
 "use client";
 
+import { formatearPct } from "@/lib/formato";
+
 interface MetricCardProps {
   label: string;
-  value: number;
-  change: number;
-  unit: string;
+  /** El valor ya formateado, en su unidad nativa. */
+  valor: string;
+  unidad: string;
+  /** La misma cifra llevada a billones, para leerla de un vistazo. */
+  conversion?: string | null;
+  /** Variación contra el mismo mes del año anterior, en %. Cálculo propio. */
+  interanualPct: number | null;
+  /** El mes del dato, ya formateado ("ago 2026"). */
+  mes: string;
+  /** De dónde sale el número: fuente o "cálculo propio sobre…". */
+  origen: string;
   delay?: number;
 }
 
-function formatMetricValue(value: number, unit: string): string {
-  if (unit === "T") return `$${value.toFixed(2)}`;
-  // Index values: format with locale separators
-  if (value >= 1000) return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
-  return value.toFixed(1);
-}
-
-function formatChangeValue(change: number): string {
-  return `${Math.abs(change)}%`;
-}
-
-export default function MetricCard({ label, value, change, unit, delay = 0 }: MetricCardProps) {
-  const isPositive = change >= 0;
-  const changeColor = isPositive ? "var(--accent)" : "var(--accent-red)";
-  const arrow = isPositive ? "\u2191" : "\u2193";
+export default function MetricCard({
+  label,
+  valor,
+  unidad,
+  conversion,
+  interanualPct,
+  mes,
+  origen,
+  delay = 0,
+}: MetricCardProps) {
+  const sube = interanualPct !== null && interanualPct >= 0;
+  const colorVariacion = interanualPct === null ? "var(--text-muted)" : sube ? "var(--accent)" : "var(--accent-blue)";
 
   return (
-    <div
-      className={`card-glass card-accent-top rounded-xl p-5 md:p-6 fade-in-up fade-in-up-${delay}`}
-    >
+    <div className={`card-glass card-accent-top rounded-xl p-5 md:p-6 fade-in-up fade-in-up-${delay}`}>
       <p
         className="text-[10px] tracking-[0.2em] uppercase mb-4 flex items-center gap-2"
         style={{ color: "var(--text-muted)" }}
       >
-        <span
-          className="w-1 h-1 rounded-full inline-block"
-          style={{ background: isPositive ? "var(--accent)" : "var(--accent-red)" }}
-        />
+        <span className="w-1 h-1 rounded-full inline-block" style={{ background: colorVariacion }} />
         {label}
       </p>
-      <div className="flex items-baseline gap-2">
-        <span
-          className="text-[28px] font-light tabular-nums tracking-tight"
-          style={{ color: "var(--text-primary)" }}
-        >
-          {formatMetricValue(value, unit)}
+      <div className="flex items-baseline gap-2 flex-wrap">
+        <span className="text-[26px] font-light tabular-nums tracking-tight" style={{ color: "var(--text-primary)" }}>
+          {valor}
         </span>
-        {unit && (
-          <span className="text-xs font-light" style={{ color: "var(--text-secondary)" }}>
-            {unit}
-          </span>
-        )}
+        <span className="text-[10px] font-light leading-tight" style={{ color: "var(--text-secondary)" }}>
+          {unidad}
+        </span>
       </div>
+      {conversion && (
+        <p className="text-[10px] mt-1 tabular-nums" style={{ color: "var(--text-muted)" }}>
+          {conversion}
+        </p>
+      )}
       <div
-        className="flex items-center gap-2 mt-3 pt-3"
+        className="flex items-center gap-2 mt-3 pt-3 flex-wrap"
         style={{ borderTop: "1px solid var(--border-subtle)" }}
       >
-        <span
-          className="text-xs font-medium tabular-nums px-1.5 py-0.5 rounded"
-          style={{
-            color: changeColor,
-            background: isPositive ? "var(--accent-bg)" : "var(--accent-red-bg)",
-          }}
-        >
-          {arrow} {formatChangeValue(change)}
-        </span>
-        <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>
-          CAGR
+        {interanualPct === null ? (
+          <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+            sin dato doce meses atrás
+          </span>
+        ) : (
+          <>
+            <span
+              className="text-xs font-medium tabular-nums px-1.5 py-0.5 rounded"
+              style={{
+                color: colorVariacion,
+                background: sube ? "var(--accent-bg)" : "var(--accent-blue-bg, rgba(51, 136, 255, 0.08))",
+              }}
+            >
+              {formatearPct(interanualPct)}
+            </span>
+            <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+              interanual · cálculo propio
+            </span>
+          </>
+        )}
+        <span className="text-[10px] ml-auto tabular-nums" style={{ color: "var(--text-muted)" }}>
+          {mes}
         </span>
       </div>
+      <p className="text-[9px] mt-2 leading-relaxed" style={{ color: "var(--text-muted)" }}>
+        {origen}
+      </p>
     </div>
   );
 }

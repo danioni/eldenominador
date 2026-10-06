@@ -34,6 +34,7 @@ export function formatearNumero(valor: number, decimales = 1): string {
 
 /** Para los ejes: 23284 → "23k", 12963895 → "13M". */
 export function formatearCompacto(valor: number): string {
+  if (valor === 0) return "0";
   const abs = Math.abs(valor);
   if (abs >= 1e9) return `${formatearNumero(valor / 1e9, abs >= 1e10 ? 0 : 1)}G`;
   if (abs >= 1e6) return `${formatearNumero(valor / 1e6, abs >= 1e7 ? 0 : 1)}M`;
