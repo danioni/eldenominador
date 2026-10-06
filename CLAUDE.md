@@ -71,12 +71,19 @@ repositorio.
 
 - Máquina principal: Windows, `C:\Users\Frank\eldenominador`, PowerShell.
 - Rama por defecto: `main`. Los PR van contra `main`.
-- Comandos, desde la raíz: `npm run dev` (servidor local), `npm run lint`
-  (ESLint) y `npm run build` (Next.js). Antes de cerrar un PR, `npm run lint` y
-  `npm run build` sin problemas nuevos.
-- Los datos del sitio llegan de `danioni/losratios` (`senales/data/series/`)
-  cuando la fase D0 esté en `main` de ese repositorio; hasta entonces no se
-  toca la integración de datos.
+- Comandos, desde la raíz: `npm run dev` (servidor local), `npm test` (tests
+  sin red), `npm run lint` (ESLint) y `npm run build` (verifica `datos.lock` y
+  construye con Next.js). Antes de cerrar un PR, los tres últimos sin
+  problemas nuevos.
+- Los datos del sitio son copias de `senales/data/series/` de
+  `danioni/losratios`, fijadas a un commit de `main` de ese repositorio en
+  `datos.lock`, con el SHA-256 de cada archivo. Se traen con
+  `npm run datos:sincronizar -- --clon ..\losratios --commit origin/main`,
+  con git y sin red, desde un clon ya actualizado. Este repositorio no
+  descarga nada de ninguna fuente.
+- Lo que losratios publica como NO MEDIDO se muestra como tarjeta con su
+  estado, nunca como dato. El sitio no calcula nada sobre las series salvo
+  la variación interanual, rotulada como cálculo propio.
 
 ## Procedencia
 
