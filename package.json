@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/datos.mjs verificar && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --test tests/",
+    "datos:sincronizar": "node scripts/datos.mjs sincronizar",
+    "datos:verificar": "node scripts/datos.mjs verificar"
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
