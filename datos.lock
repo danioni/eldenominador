@@ -1,0 +1,54 @@
+{
+  "repositorio": "danioni/losratios",
+  "rama": "main",
+  "commit": "5e8a7b54c6cd3b232deaa00f5271163a86190610",
+  "fecha_lectura": "2026-10-06",
+  "destino": "data/series",
+  "archivos": {
+    "serie_D0.csv": {
+      "origen": "senales/data/series/serie_D0.csv",
+      "bytes": 14292,
+      "sha256": "8d48ba052099c06a455681ebe5508654121a5710e60a21834953e4c34e44780a"
+    },
+    "denominador_dinero.csv": {
+      "origen": "senales/data/series/denominador_dinero.csv",
+      "bytes": 116669,
+      "sha256": "80ce4334dae23e5ae93e4bb6836e5e310bfa6f01afcd1fc035eab74746010a81"
+    },
+    "denominador_balances.csv": {
+      "origen": "senales/data/series/denominador_balances.csv",
+      "bytes": 42821,
+      "sha256": "4cb89e56312473b6067bf3b50bec4eeded71e65182090bf4501244a1b72c8367"
+    },
+    "denominador_tipos_de_cambio.csv": {
+      "origen": "senales/data/series/denominador_tipos_de_cambio.csv",
+      "bytes": 98263,
+      "sha256": "56e43453689774b7e949d488931c5ad45f90c4b559b907e88a759f8d7109548a"
+    },
+    "denominador_agregado.csv": {
+      "origen": "senales/data/series/denominador_agregado.csv",
+      "bytes": 21377,
+      "sha256": "ae72b0b5c47d7ba704d607dc6790bdf73340cc90c47c71c1734066a1bf0bd5f8"
+    },
+    "denominador_ratios.csv": {
+      "origen": "senales/data/series/denominador_ratios.csv",
+      "bytes": 47063,
+      "sha256": "b34756d1dad063a765d07d97ebf5218eb7b614949f276c29eba40fc8374d7e67"
+    },
+    "denominador_pares.csv": {
+      "origen": "senales/data/series/denominador_pares.csv",
+      "bytes": 245,
+      "sha256": "6d229f8d20cd97d235f3a849614626443db60d35d9bf584c77062a782bb3e3d6"
+    },
+    "denominador_descargas.csv": {
+      "origen": "senales/data/series/denominador_descargas.csv",
+      "bytes": 5292,
+      "sha256": "f3016f898057023fd5caa9b4a43dbf0ca65c0c17a9eae1a47f7045e7fe876072"
+    },
+    "citas_terceros.csv": {
+      "origen": "senales/data/series/citas_terceros.csv",
+      "bytes": 1695,
+      "sha256": "dec59d0d74b56b963961988f4cc8f954049675555c2718f64b2fc3079fe040fa"
+    }
+  }
+}
