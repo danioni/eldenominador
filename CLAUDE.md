@@ -53,6 +53,9 @@ repositorio.
   changelog, `FUENTES.md` y los tests.
 - Se respetan los términos de cada fuente. Por ejemplo, el FMI no permite la
   descarga masiva automatizada: su archivo se actualiza a mano.
+- **Antes de cualquier pedido automatizado a un sitio, leer su `robots.txt` y
+  sus términos.** Si prohíben el acceso automatizado, no se descarga nada de
+  ahí.
 
 ## Forma de trabajo
 
@@ -79,6 +82,6 @@ repositorio.
 
 Las secciones "Idioma", "Datos e integridad", "Licencias y repositorio público"
 y "Forma de trabajo" son copia textual de `CLAUDE.md` de `danioni/losratios`,
-rama `main`, commit `279e38c6d84a13c1682b5cebb2f709d79370cd37`, leído el
+rama `main`, commit `5e8a7b54c6cd3b232deaa00f5271163a86190610`, leído el
 2026-10-06. Solo "Entorno" es propia de este repositorio. Para sincronizar:
-`git -C ..\losratios diff 279e38c main -- CLAUDE.md`.
+`git -C ..\losratios diff 5e8a7b5 main -- CLAUDE.md`.
