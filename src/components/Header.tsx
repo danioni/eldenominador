@@ -117,7 +117,7 @@ export default function Header({ ultimoMes }: { ultimoMes: string }) {
               El Denominador
             </h1>
             <p className="text-[9px] sm:text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>
-              Observatorio de Liquidez Global
+              Observatorio de Liquidez
             </p>
           </div>
         </div>

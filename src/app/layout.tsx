@@ -3,11 +3,10 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "El Denominador — Observatorio de Liquidez Global",
+  title: "El Denominador — Observatorio de Liquidez",
   description:
-    "El M2 de EE.UU., la Eurozona y Japón, los balances de la Fed, el Eurosistema y el Banco de Japón, y el oro y BTC medidos en M2. Series publicadas por sus emisores, con fuente; lo no medido, dicho como tal. Los precios no suben: la unidad se achica.",
+    "El M2 de EE.UU., la Eurozona y Japón, los balances de la Fed, el Eurosistema y el Banco de Japón, y el oro y BTC medidos en M2. Series publicadas por sus emisores, con fuente; lo no medido, dicho como tal.",
   keywords: [
-    "liquidez global",
     "M2",
     "bancos centrales",
     "Fed",

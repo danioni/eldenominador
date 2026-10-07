@@ -303,6 +303,9 @@ export default function Dashboard({ datos }: { datos: Datos }) {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
       {/* Tesis */}
       <div className="mb-8 sm:mb-12 fade-in-up pt-4">
+        <p className="text-[10px] tracking-[0.2em] uppercase mb-2" style={{ color: "var(--text-muted)" }}>
+          Tesis
+        </p>
         <p className="font-serif text-3xl sm:text-4xl md:text-5xl leading-[1.15] tracking-tight" style={{ color: "var(--text-primary)" }}>
           Los precios no suben.
           <br />
