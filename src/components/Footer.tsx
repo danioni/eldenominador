@@ -1,6 +1,7 @@
 "use client";
 
 import type { Lock } from "@/lib/series";
+import { CREDITO_API_BOJ, usaApiBoj } from "@/lib/creditos";
 
 const ECOSYSTEM_LINKS = [
   { label: "El Denominador", href: "https://eldenominador.com", desc: "El dinero que se encoge", current: true },
@@ -53,6 +54,11 @@ export default function Footer({ lock, atribuciones }: { lock: Lock; atribucione
                 </li>
               ))}
             </ul>
+            {atribuciones.some(usaApiBoj) && (
+              <p className="text-[10px] leading-relaxed mt-3" lang="en" style={{ color: "var(--text-secondary)" }}>
+                {CREDITO_API_BOJ}
+              </p>
+            )}
           </div>
         </div>
 

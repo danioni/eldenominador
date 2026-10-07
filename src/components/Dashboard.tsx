@@ -10,6 +10,7 @@ import ChartSection from "./ChartSection";
 import GraficoSerie, { GraficoRatio, RANGOS, recortar, ticksAnuales, type Rango } from "./GraficoSerie";
 import TarjetaNoMedida from "./TarjetaNoMedida";
 import Fichas from "./Fichas";
+import { CREDITO_API_BOJ, usaApiBoj } from "@/lib/creditos";
 
 // ── Controles ──────────────────────────────────────────────
 
@@ -134,6 +135,11 @@ function PanelSerie({ serie, color, rango, log, titulo }: { serie: SeriePublicad
           ` Líneas verticales, quiebres declarados: ${ficha.quiebres.map(quiebreCorto).join(" · ")}.`}
         {ficha.quiebres.length > 0 && ficha.quiebres.length <= 2 && ` Línea vertical: ${ficha.quiebres.join("; ")}.`}
       </p>
+      {usaApiBoj(ficha.atribucion) && (
+        <p className="text-[9px] leading-relaxed mt-1.5" lang="en" style={{ color: "var(--text-secondary)" }}>
+          {CREDITO_API_BOJ}
+        </p>
+      )}
     </div>
   );
 }
