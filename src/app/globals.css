@@ -20,6 +20,7 @@
     --accent-purple: #aa55ff;
     --accent-cyan: #00ddff;
     --accent-green: #00ff88;
+    --accent-orange: #ff8800;
     --bg-tooltip: rgba(6, 6, 11, 0.95);
     --accent-bg: rgba(255, 68, 51, 0.06);
     --accent-bg-active: rgba(255, 68, 51, 0.12);
@@ -54,6 +55,7 @@
     --accent-purple: #7733cc;
     --accent-cyan: #0088aa;
     --accent-green: #00895a;
+    --accent-orange: #cc6a00;
     --bg-tooltip: rgba(255, 255, 255, 0.95);
     --accent-bg: rgba(204, 34, 0, 0.06);
     --accent-bg-active: rgba(204, 34, 0, 0.12);

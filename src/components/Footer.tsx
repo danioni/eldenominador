@@ -1,12 +1,16 @@
 "use client";
 
+import type { Lock } from "@/lib/series";
+import { CREDITO_API_BOJ, usaApiBoj } from "@/lib/creditos";
+
 const ECOSYSTEM_LINKS = [
   { label: "El Denominador", href: "https://eldenominador.com", desc: "El dinero que se encoge", current: true },
-  { label: "El Numerador", href: "https://elnumerador.com", desc: "Los activos que protegen" },
-  { label: "Los Ratios", href: "https://losratios.com", desc: "Cómo medir en términos reales" },
+  { label: "El Numerador", href: "https://elnumerador.com", desc: "Los activos de arriba de la fracción" },
+  { label: "Los Ratios", href: "https://losratios.com", desc: "Un activo medido en otro" },
 ];
 
-export default function Footer() {
+export default function Footer({ lock, atribuciones }: { lock: Lock; atribuciones: string[] }) {
+  const urlCommit = `https://github.com/${lock.repositorio}/tree/${lock.commit}/senales/data/series`;
   return (
     <footer className="relative mt-16">
       <div
@@ -17,14 +21,53 @@ export default function Footer() {
         }}
       />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-        {/* Ecosystem tagline */}
-        <div className="text-center">
+        {/* Origen de los datos */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+          <div>
+            <p className="uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)", fontSize: "10px" }}>
+              Origen de los datos
+            </p>
+            <p>
+              Todas las series salen de{" "}
+              <a href={urlCommit} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--accent)" }}>
+                {lock.repositorio}
+              </a>
+              , carpeta <code>senales/data/series/</code>, rama <code>{lock.rama}</code>, commit{" "}
+              <code title={lock.commit}>{lock.commit.slice(0, 7)}</code>, leído el {lock.fecha_lectura}. Son copias fijadas en{" "}
+              <code>datos.lock</code> y verificadas por su SHA-256 antes de cada build. Este sitio no descarga nada de ninguna
+              fuente: los crudos, los gates de validación, los supuestos numerados (A-D0-*) y el changelog están en ese
+              repositorio.
+            </p>
+            <p className="mt-2">
+              Los valores se publican sin cambios. Las únicas cifras calculadas aquí son las variaciones interanuales y las
+              veces entre dos meses, rotuladas como cálculo propio. Las conversiones a billones (10¹²) son cambios de unidad.
+            </p>
+          </div>
+          <div>
+            <p className="uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)", fontSize: "10px" }}>
+              Atribuciones
+            </p>
+            <ul className="space-y-1.5">
+              {atribuciones.map((a) => (
+                <li key={a} className="text-[10px] leading-relaxed">
+                  {a}
+                </li>
+              ))}
+            </ul>
+            {atribuciones.some(usaApiBoj) && (
+              <p className="text-[10px] leading-relaxed mt-3" lang="en" style={{ color: "var(--text-secondary)" }}>
+                {CREDITO_API_BOJ}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Ecosistema */}
+        <div className="text-center pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           <p className="text-[10px] sm:text-[11px] tracking-[0.15em] uppercase" style={{ color: "var(--text-muted)" }}>
             Todo precio es una fracción: Numerador &divide; Denominador
           </p>
         </div>
-
-        {/* Ecosystem links */}
         <div className="flex flex-wrap justify-center gap-x-4 sm:gap-x-8 gap-y-3">
           {ECOSYSTEM_LINKS.map((link) => (
             <div key={link.label} className="flex items-center gap-2">
@@ -44,7 +87,7 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Attribution */}
+        {/* Firma */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           <div className="flex items-center gap-3">
             <div

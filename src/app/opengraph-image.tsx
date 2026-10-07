@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export const alt = "El Denominador — Observatorio de Liquidez Global";
+export const alt = "El Denominador — Observatorio de Liquidez";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -161,7 +161,7 @@ export default async function Image() {
                 fontFamily: "monospace",
               }}
             >
-              Observatorio de Liquidez Global
+              Observatorio de Liquidez
             </div>
           </div>
 
@@ -174,7 +174,7 @@ export default async function Image() {
               marginTop: "8px",
             }}
           >
-            Los precios no suben. La unidad se achica.
+            M2, balances de bancos centrales, oro y BTC medidos en M2
           </div>
         </div>
 

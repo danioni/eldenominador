@@ -3,25 +3,24 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "El Denominador — Observatorio de Liquidez Global",
+  title: "El Denominador — Observatorio de Liquidez",
   description:
-    "Tracking de liquidez global en tiempo real. M2, bancos centrales, liquidez neta. Los precios no suben — la unidad se achica.",
+    "El M2 de EE.UU., la Eurozona y Japón, los balances de la Fed, el Eurosistema y el Banco de Japón, y el oro y BTC medidos en M2. Series publicadas por sus emisores, con fuente; lo no medido, dicho como tal.",
   keywords: [
-    "liquidez global",
     "M2",
     "bancos centrales",
     "Fed",
     "BCE",
     "BoJ",
-    "PBoC",
     "denominador",
     "macro",
-    "liquidez neta",
+    "oro",
+    "bitcoin",
   ],
   openGraph: {
     title: "El Denominador",
     description:
-      "Cada precio es una fracción. Esto trackea el de abajo.",
+      "Cada precio es una fracción. Esto muestra el de abajo.",
     url: "https://eldenominador.com",
     siteName: "El Denominador",
     type: "website",
@@ -31,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "El Denominador",
     description:
-      "Cada precio es una fracción. Esto trackea el de abajo.",
+      "Cada precio es una fracción. Esto muestra el de abajo.",
   },
   icons: {
     icon: "/favicon.svg",

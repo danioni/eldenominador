@@ -1,0 +1,5 @@
+# Las series de data/series/ se verifican contra el SHA-256 de datos.lock antes
+# de cada build. Git no puede tocarles un solo byte: sin esto, un checkout con
+# autocrlf convertiría los saltos de línea y el hash dejaría de coincidir.
+data/series/* -text
+datos.lock -text

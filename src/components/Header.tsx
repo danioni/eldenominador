@@ -1,20 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { etiquetaMes } from "@/lib/formato";
+import { setTheme, useTheme } from "./theme";
 
 function ThemeToggle() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-
-  useEffect(() => {
-    const current = document.documentElement.getAttribute("data-theme") as "dark" | "light";
-    if (current) setTheme(current);
-  }, []);
+  const theme = useTheme();
 
   const toggle = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   return (
@@ -88,7 +81,7 @@ function EcosystemBar() {
   );
 }
 
-export default function Header() {
+export default function Header({ ultimoMes }: { ultimoMes: string }) {
   return (
     <header
       className="relative"
@@ -110,7 +103,7 @@ export default function Header() {
             }}
           >
             <svg viewBox="0 0 64 64" className="w-5 h-5 sm:w-6 sm:h-6">
-              {/* Shrinking ruler — tapered body with compressing tick marks */}
+              {/* La regla que se achica: cuerpo que se afina y marcas que se comprimen */}
               <path d="M7,18 L57,25 L57,39 L7,46 Z" fill="#ff4433"/>
               <line x1="15" y1="19.2" x2="15" y2="34" stroke="#fff" strokeWidth="3" strokeLinecap="round" opacity="0.92"/>
               <line x1="27" y1="21" x2="27" y2="33" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" opacity="0.70"/>
@@ -124,40 +117,24 @@ export default function Header() {
               El Denominador
             </h1>
             <p className="text-[9px] sm:text-[10px] tracking-[0.15em] sm:tracking-[0.2em] uppercase mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>
-              Observatorio de Liquidez Global
+              Observatorio de Liquidez
             </p>
           </div>
         </div>
 
-        {/* Live indicator + theme toggle */}
+        {/* Último dato + tema */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <div
-            className="label-badge hidden sm:inline-flex"
-          >
-            <div
-              className="w-1.5 h-1.5 rounded-full pulse-dot"
-              style={{ background: "var(--accent)" }}
-            />
-            <span className="text-[10px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
-              Datos actualizados
-            </span>
-          </div>
-          <div
-            className="label-badge sm:hidden"
-          >
-            <div
-              className="w-1.5 h-1.5 rounded-full pulse-dot"
-              style={{ background: "var(--accent)" }}
-            />
-            <span className="text-[9px] tracking-wider uppercase" style={{ color: "var(--text-muted)" }}>
-              Live
+          <div className="label-badge">
+            <div className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent)" }} />
+            <span className="text-[9px] sm:text-[10px] tracking-wider uppercase tabular-nums" style={{ color: "var(--text-muted)" }}>
+              <span className="hidden sm:inline">Último dato: </span>
+              {etiquetaMes(ultimoMes)}
             </span>
           </div>
           <ThemeToggle />
         </div>
       </div>
 
-      {/* Subtle gradient line */}
       <div
         className="absolute bottom-0 left-0 right-0 h-[1px]"
         style={{
