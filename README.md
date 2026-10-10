@@ -2,9 +2,10 @@
 
 **Observatorio del denominador: el dinero con el que se mide todo lo demás.**
 
-> Cada precio es una fracción. El numerador es el activo. El denominador es la
-> cantidad de unidades monetarias en circulación. Cuando el denominador crece,
-> el número sube, pero lo que cambió fue el tamaño de la unidad.
+> Cada precio es una fracción. Arriba está lo que se compra; abajo, la moneda
+> en que se expresa su precio. Cuando cambia el dinero, cambia la medida: este
+> sitio muestra cómo evoluciona la cantidad de dinero y qué cambia al medir los
+> activos contra ella.
 
 ## Qué muestra
 
@@ -29,7 +30,10 @@ interpolar:
   validación, licencia, atribución, supuestos y quiebres.
 
 El sitio describe, no recomienda. Ningún número sin fuente: lo que no se pudo
-medir se dice como tal.
+medir se dice como tal. Junto a cada gráfico van dos textos breves, "Qué
+muestra" y "Cómo interpretarlo"; los códigos de supuestos (`A-D0-*`, `A-R0-*`),
+identificadores, archivos y validaciones quedan en el desplegable "Metodología
+y fuentes" de cada bloque y en las fichas completas al pie.
 
 ## De dónde salen los datos
 
@@ -71,7 +75,7 @@ interanuales, rotuladas como cálculo propio.
 ```bash
 npm install
 npm run dev            # servidor local
-npm test               # tests sin red: lector de CSV, lock e invariantes de los datos
+npm test               # tests sin red: lector de CSV, lock, invariantes de los datos y formato numérico
 npm run lint
 npm run build          # verifica datos.lock y construye
 npm run datos:verificar
@@ -89,4 +93,4 @@ ficha y en el pie del sitio.
 
 ---
 
-*Los precios no suben. La unidad se achica.*
+*Cuando cambia el dinero, cambia la medida.*
