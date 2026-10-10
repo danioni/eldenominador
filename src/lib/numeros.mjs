@@ -118,18 +118,3 @@ export function formatearBillones(valor, unidad, decimales = 2) {
 export function valorConUnidad(valor, unidad) {
   return `${formatearNumero(valor, decimalesPara(valor))} ${unidad}`;
 }
-
-/**
- * Para los ejes, mientras no pasen a billones: 23284 → "23 k", 12963895 → "13 M".
- * @param {number} valor
- */
-export function formatearCompacto(valor) {
-  if (valor === 0) return "0";
-  const abs = Math.abs(valor);
-  if (abs >= 1e9) return `${formatearNumero(valor / 1e9, abs >= 1e10 ? 0 : 1)} G`;
-  if (abs >= 1e6) return `${formatearNumero(valor / 1e6, abs >= 1e7 ? 0 : 1)} M`;
-  if (abs >= 1e3) return `${formatearNumero(valor / 1e3, abs >= 1e4 ? 0 : 1)} k`;
-  if (abs >= 100) return formatearNumero(valor, 0);
-  if (abs >= 10) return formatearNumero(valor, 1);
-  return formatearNumero(valor, 2);
-}

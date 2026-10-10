@@ -7,7 +7,6 @@ export {
   aBillones,
   decimalesPara,
   formatearBillones,
-  formatearCompacto,
   formatearEje,
   formatearNumero,
   formatearNumeroHasta,

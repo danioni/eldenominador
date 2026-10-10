@@ -4,7 +4,7 @@ import type { Lock } from "@/lib/series";
 import { CREDITO_API_BOJ, usaApiBoj } from "@/lib/creditos";
 
 const ECOSYSTEM_LINKS = [
-  { label: "El Denominador", href: "https://eldenominador.com", desc: "El dinero que se encoge", current: true },
+  { label: "El Denominador", href: "https://eldenominador.com", desc: "La moneda en que se expresa el precio", current: true },
   { label: "El Numerador", href: "https://elnumerador.com", desc: "Los activos de arriba de la fracción" },
   { label: "Los Ratios", href: "https://losratios.com", desc: "Un activo medido en otro" },
 ];
@@ -22,9 +22,9 @@ export default function Footer({ lock, atribuciones }: { lock: Lock; atribucione
       />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
         {/* Origen de los datos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 texto">
           <div>
-            <p className="uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)", fontSize: "10px" }}>
+            <p className="rotulo mb-2" style={{ color: "var(--text-secondary)" }}>
               Origen de los datos
             </p>
             <p>
@@ -35,27 +35,27 @@ export default function Footer({ lock, atribuciones }: { lock: Lock; atribucione
               , carpeta <code>senales/data/series/</code>, rama <code>{lock.rama}</code>, commit{" "}
               <code title={lock.commit}>{lock.commit.slice(0, 7)}</code>, leído el {lock.fecha_lectura}. Son copias fijadas en{" "}
               <code>datos.lock</code> y verificadas por su SHA-256 antes de cada build. Este sitio no descarga nada de ninguna
-              fuente: los crudos, los gates de validación, los supuestos numerados (A-D0-*) y el changelog están en ese
-              repositorio.
+              fuente: los crudos, los gates de validación, los supuestos numerados (A-D0-*, A-R0-*) y el changelog están en
+              ese repositorio.
             </p>
             <p className="mt-2">
-              Los valores se publican sin cambios. Las únicas cifras calculadas aquí son las variaciones interanuales y las
-              veces entre dos meses, rotuladas como cálculo propio. Las conversiones a billones (10¹²) son cambios de unidad.
+              Los valores se publican sin cambios. Las únicas cifras calculadas aquí son las variaciones interanuales,
+              rotuladas como cálculo propio. Las conversiones a billones (10¹²) son cambios de unidad, no de valor.
             </p>
           </div>
           <div>
-            <p className="uppercase tracking-widest mb-2" style={{ color: "var(--text-secondary)", fontSize: "10px" }}>
+            <p className="rotulo mb-2" style={{ color: "var(--text-secondary)" }}>
               Atribuciones
             </p>
             <ul className="space-y-1.5">
               {atribuciones.map((a) => (
-                <li key={a} className="text-[10px] leading-relaxed">
+                <li key={a} className="meta">
                   {a}
                 </li>
               ))}
             </ul>
             {atribuciones.some(usaApiBoj) && (
-              <p className="text-[10px] leading-relaxed mt-3" lang="en" style={{ color: "var(--text-secondary)" }}>
+              <p className="meta mt-3" lang="en" style={{ color: "var(--text-secondary)" }}>
                 {CREDITO_API_BOJ}
               </p>
             )}
@@ -64,7 +64,7 @@ export default function Footer({ lock, atribuciones }: { lock: Lock; atribucione
 
         {/* Ecosistema */}
         <div className="text-center pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-          <p className="text-[10px] sm:text-[11px] tracking-[0.15em] uppercase" style={{ color: "var(--text-muted)" }}>
+          <p className="rotulo" style={{ fontSize: "0.6875rem" }}>
             Todo precio es una fracción: Numerador &divide; Denominador
           </p>
         </div>
@@ -75,12 +75,12 @@ export default function Footer({ lock, atribuciones }: { lock: Lock; atribucione
                 href={link.href}
                 target={link.current ? undefined : "_blank"}
                 rel={link.current ? undefined : "noopener noreferrer"}
-                className="text-[10px] sm:text-[11px] tracking-wider uppercase font-medium transition-opacity hover:opacity-80"
+                className="font-mono text-[11px] tracking-wider uppercase font-medium transition-opacity hover:opacity-80"
                 style={{ color: link.current ? "var(--accent)" : "var(--text-secondary)" }}
               >
                 {link.label}
               </a>
-              <span className="text-[9px] hidden sm:inline" style={{ color: "var(--text-muted)" }}>
+              <span className="meta hidden sm:inline">
                 {link.desc}
               </span>
             </div>
@@ -115,11 +115,11 @@ export default function Footer({ lock, atribuciones }: { lock: Lock; atribucione
                 </g>
               </svg>
             </div>
-            <span className="text-[10px] tracking-wider" style={{ color: "var(--text-muted)" }}>
+            <span className="meta tracking-wider">
               Parte del ecosistema eldenominador · elnumerador · losratios
             </span>
           </div>
-          <span className="text-[9px] tabular-nums" style={{ color: "var(--text-muted)" }}>
+          <span className="meta tabular-nums">
             {new Date().getFullYear()}
           </span>
         </div>
