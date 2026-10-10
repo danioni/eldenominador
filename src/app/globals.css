@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/*
+ * Tres familias, cada una con un papel:
+ *  - Instrument Serif: titulares y nombres de sección (la voz editorial).
+ *  - Instrument Sans: el texto que se lee de corrido (explicaciones, notas).
+ *  - JetBrains Mono: cifras, unidades, fechas, etiquetas y metadatos.
+ */
+@theme inline {
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
 @layer base {
   :root,
   [data-theme="dark"] {
@@ -7,11 +19,12 @@
     --bg-secondary: #0c0c14;
     --bg-card: #10101a;
     --bg-card-hover: #141420;
-    --border: #1a1a2e;
-    --border-subtle: #12121e;
+    --border: #1e1e32;
+    --border-subtle: #16162a;
+    /* Contraste sobre la tarjeta (#10101a): primario 15:1, secundario 7,7:1, apagado 5:1. */
     --text-primary: #e8e8ed;
-    --text-secondary: #8888a0;
-    --text-muted: #55556a;
+    --text-secondary: #a4a4bc;
+    --text-muted: #8080a0;
     --accent: #ff4433;
     --accent-dim: #cc3322;
     --accent-red: #ff3355;
@@ -21,17 +34,19 @@
     --accent-cyan: #00ddff;
     --accent-green: #00ff88;
     --accent-orange: #ff8800;
-    --bg-tooltip: rgba(6, 6, 11, 0.95);
+    --bg-tooltip: rgba(6, 6, 11, 0.96);
     --accent-bg: rgba(255, 68, 51, 0.06);
     --accent-bg-active: rgba(255, 68, 51, 0.12);
     --accent-border: rgba(255, 68, 51, 0.1);
     --accent-border-active: rgba(255, 68, 51, 0.2);
     --accent-glow: 0 0 12px rgba(255, 68, 51, 0.06);
     --accent-red-bg: rgba(255, 51, 85, 0.08);
+    --accent-blue-bg: rgba(51, 136, 255, 0.1);
     --card-glass-bg: linear-gradient(145deg, rgba(16, 16, 26, 0.9), rgba(10, 10, 18, 0.7));
     --card-glass-hover-bg: linear-gradient(145deg, rgba(20, 20, 34, 0.9), rgba(14, 14, 24, 0.7));
     --card-glass-hover-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 68, 51, 0.05);
     --controls-bg: rgba(16, 16, 26, 0.6);
+    --details-bg: rgba(255, 255, 255, 0.02);
     --ambient-glow: rgba(255, 68, 51, 0.03);
     --noise-opacity: 0.015;
     --glow-shadow: 0 0 30px rgba(255, 68, 51, 0.35), 0 0 60px rgba(255, 68, 51, 0.12);
@@ -42,31 +57,34 @@
     --bg-secondary: #f0f0f4;
     --bg-card: #ffffff;
     --bg-card-hover: #f5f5f8;
-    --border: #e0e0e8;
-    --border-subtle: #eaeaf0;
+    --border: #dcdce6;
+    --border-subtle: #e8e8f0;
+    /* Contraste sobre blanco: primario 17:1, secundario 7,2:1, apagado 5,6:1. */
     --text-primary: #1a1a2e;
     --text-secondary: #555570;
-    --text-muted: #8888a0;
+    --text-muted: #66667f;
     --accent: #cc2200;
     --accent-dim: #aa1800;
     --accent-red: #cc2244;
-    --accent-amber: #bb7700;
+    --accent-amber: #9a6300;
     --accent-blue: #2266cc;
     --accent-purple: #7733cc;
     --accent-cyan: #0088aa;
     --accent-green: #00895a;
-    --accent-orange: #cc6a00;
-    --bg-tooltip: rgba(255, 255, 255, 0.95);
+    --accent-orange: #b35c00;
+    --bg-tooltip: rgba(255, 255, 255, 0.97);
     --accent-bg: rgba(204, 34, 0, 0.06);
     --accent-bg-active: rgba(204, 34, 0, 0.12);
     --accent-border: rgba(204, 34, 0, 0.15);
     --accent-border-active: rgba(204, 34, 0, 0.25);
     --accent-glow: none;
     --accent-red-bg: rgba(204, 34, 68, 0.08);
+    --accent-blue-bg: rgba(34, 102, 204, 0.1);
     --card-glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(248, 248, 250, 0.7));
     --card-glass-hover-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(245, 245, 248, 0.8));
     --card-glass-hover-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(204, 34, 0, 0.08);
     --controls-bg: rgba(240, 240, 244, 0.8);
+    --details-bg: rgba(0, 0, 0, 0.02);
     --ambient-glow: rgba(204, 34, 0, 0.02);
     --noise-opacity: 0;
     --glow-shadow: none;
@@ -80,10 +98,23 @@
   body {
     background: var(--bg-primary);
     color: var(--text-primary);
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+  }
+
+  /* Las cifras alinean sus dígitos. */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 }
 
@@ -111,11 +142,64 @@ body::before {
   stroke: var(--border-subtle) !important;
 }
 .recharts-text {
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 10px !important;
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  fill: var(--text-muted) !important;
+}
+/* El tooltip no debe salirse de la pantalla en móvil. */
+.recharts-tooltip-wrapper {
+  max-width: calc(100vw - 2rem);
 }
 
 @layer components {
+  /* Texto explicativo: el que se lee de corrido. */
+  .texto {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  @media (min-width: 640px) {
+    .texto {
+      font-size: 0.875rem;
+    }
+  }
+  .texto strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .texto a {
+    color: var(--accent);
+    text-underline-offset: 3px;
+  }
+  .texto a:hover {
+    text-decoration: underline;
+  }
+
+  /* Metadatos: fuente, fecha, unidad. Mono, pequeño pero legible. */
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+  }
+  .meta a {
+    color: var(--accent);
+    text-underline-offset: 3px;
+  }
+  .meta a:hover {
+    text-decoration: underline;
+  }
+
+  /* Rótulos en versalitas: nombres de tarjeta, encabezados pequeños. */
+  .rotulo {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
   .glow-accent {
     text-shadow: var(--glow-shadow);
   }
@@ -191,6 +275,59 @@ body::before {
     background: var(--accent-bg);
     border: 1px solid var(--accent-border);
   }
+
+  /* Desplegable "Metodología y fuentes": cerrado por defecto, con flecha propia. */
+  .desplegable {
+    border: 1px solid var(--border-subtle);
+    border-radius: 0.5rem;
+    background: var(--details-bg);
+  }
+  .desplegable > summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    user-select: none;
+  }
+  .desplegable > summary::-webkit-details-marker {
+    display: none;
+  }
+  .desplegable > summary::before {
+    content: '';
+    width: 0.4rem;
+    height: 0.4rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    margin-left: 0.1rem;
+  }
+  .desplegable[open] > summary::before {
+    transform: rotate(45deg);
+  }
+  .desplegable > summary:hover {
+    color: var(--text-secondary);
+  }
+  .desplegable > .desplegable-cuerpo {
+    padding: 0.25rem 0.75rem 0.75rem;
+    border-top: 1px solid var(--border-subtle);
+    min-width: 0;
+  }
+  /* Identificadores y URL largos no deben ensanchar la tarjeta en móvil. */
+  .desplegable code,
+  .desplegable a,
+  dd code,
+  dd a {
+    overflow-wrap: anywhere;
+  }
 }
 
 @keyframes pulse-dot {
@@ -210,4 +347,19 @@ body::before {
 .fade-in-up-4 { animation-delay: 0.2s; opacity: 0; }
 .fade-in-up-5 { animation-delay: 0.25s; opacity: 0; }
 
-.font-serif { font-family: 'Instrument Serif', serif; }
+@media (prefers-reduced-motion: reduce) {
+  .fade-in-up,
+  .fade-in-up-1,
+  .fade-in-up-2,
+  .fade-in-up-3,
+  .fade-in-up-4,
+  .fade-in-up-5 {
+    animation: none;
+    opacity: 1;
+  }
+  .card-glass,
+  .card-glass:hover {
+    transition: none;
+    transform: none;
+  }
+}
