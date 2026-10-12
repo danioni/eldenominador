@@ -13,7 +13,7 @@ import {
   YAxis,
 } from "recharts";
 import type { Punto, PuntoRatio } from "@/lib/series";
-import { aBillones, anioDe, decimalesPara, etiquetaMes, formatearCompacto, formatearNumero } from "@/lib/formato";
+import { aBillones, anioDe, decimalesPara, etiquetaMes, formatearEje, formatearNumero, formatearPct } from "@/lib/formato";
 
 // ── Rango de meses y marcas del eje ────────────────────────
 
@@ -45,33 +45,52 @@ export function ticksAnuales(meses: string[]): string[] | undefined {
   return ticks;
 }
 
-const ESTILO_TOOLTIP = {
+export const ESTILO_TOOLTIP = {
   background: "var(--bg-tooltip)",
   border: "1px solid var(--border)",
   backdropFilter: "blur(10px)",
+  boxShadow: "0 8px 24px rgba(0, 0, 0, 0.25)",
 } as const;
 
 /** Lo que recharts le pasa al contenido del tooltip; la fila de datos va en payload[i].payload. */
-interface PropsTooltip {
+export interface PropsTooltip {
   active?: boolean;
   payload?: ReadonlyArray<{ payload?: unknown }>;
 }
 
-const EJE_X = {
+export const EJE_X = {
   stroke: "var(--text-muted)",
-  tick: { fontSize: 10 },
+  tick: { fontSize: 11 },
   axisLine: false,
   tickLine: false,
-  minTickGap: 12,
+  minTickGap: 14,
 } as const;
 
-const EJE_Y = {
+export const EJE_Y = {
   stroke: "var(--text-muted)",
-  tick: { fontSize: 10 },
+  tick: { fontSize: 11 },
   axisLine: false,
   tickLine: false,
-  width: 46,
+  width: 52,
 } as const;
+
+/** El rótulo del eje vertical: unidad y escala, encima del gráfico. */
+export function RotuloEje({ unidad, log }: { unidad: string; log?: boolean }) {
+  return (
+    <p className="meta mb-1 tabular-nums">
+      Eje vertical: {unidad}
+      {log ? " · escala logarítmica" : ""}
+    </p>
+  );
+}
+
+/** Las marcas del eje, en billones cuando la unidad lo admite. */
+export function formateadorEje(unidad: string): (valor: number) => string {
+  return (valor: number) => {
+    const c = aBillones(valor, unidad);
+    return formatearEje(c ? c.valor : valor);
+  };
+}
 
 // ── Una serie mensual en su unidad nativa ──────────────────
 
@@ -97,35 +116,34 @@ function TooltipSerie({ active, payload, unidad, color }: PropsTooltip & { unida
   const fila = payload[0].payload as FilaSerie | undefined;
   if (!fila) return null;
   const p = fila.punto;
-  const conversion = aBillones(p.valor, unidad);
+  const billones = aBillones(p.valor, unidad);
   return (
-    <div className="rounded-lg px-4 py-3 text-xs max-w-[280px]" style={ESTILO_TOOLTIP}>
-      <p className="mb-1 font-medium" style={{ color: "var(--text-secondary)" }}>
+    <div className="rounded-lg px-4 py-3 max-w-[280px]" style={ESTILO_TOOLTIP}>
+      <p className="meta mb-1" style={{ color: "var(--text-secondary)" }}>
         {etiquetaMes(p.mes)}
       </p>
-      <p className="tabular-nums font-medium" style={{ color }}>
-        {formatearNumero(p.valor, decimalesPara(p.valor))}{" "}
-        <span className="font-normal" style={{ color: "var(--text-muted)" }}>
-          {unidad}
-        </span>
-      </p>
-      {conversion && (
-        <p className="tabular-nums text-[10px]" style={{ color: "var(--text-muted)" }}>
-          ≈ {formatearNumero(conversion.valor, 2)} {conversion.unidad}
+      {billones ? (
+        <>
+          <p className="font-mono text-sm tabular-nums font-medium" style={{ color }}>
+            {formatearNumero(billones.valor, 2)} <span className="font-normal text-xs" style={{ color: "var(--text-secondary)" }}>{billones.unidad}</span>
+          </p>
+          <p className="meta tabular-nums">
+            = {formatearNumero(p.valor, decimalesPara(p.valor))} {unidad}
+          </p>
+        </>
+      ) : (
+        <p className="font-mono text-sm tabular-nums font-medium" style={{ color }}>
+          {formatearNumero(p.valor, decimalesPara(p.valor))} <span className="font-normal text-xs" style={{ color: "var(--text-secondary)" }}>{unidad}</span>
         </p>
       )}
       {p.estado !== "dato" && (
-        <p className="text-[10px] mt-1" style={{ color: "var(--accent-amber)" }}>
+        <p className="meta mt-1" style={{ color: "var(--accent-amber)" }}>
           {p.estado}, según la fuente
         </p>
       )}
-      {p.fechaOrigen && (
-        <p className="text-[10px] mt-1" style={{ color: "var(--text-muted)" }}>
-          dato semanal del {p.fechaOrigen}
-        </p>
-      )}
+      {p.fechaOrigen && <p className="meta mt-1">dato semanal del {p.fechaOrigen}</p>}
       {p.quiebre && (
-        <p className="text-[10px] mt-1" style={{ color: "var(--text-secondary)" }}>
+        <p className="meta mt-1" style={{ color: "var(--text-secondary)" }}>
           quiebre: {p.quiebre}
         </p>
       )}
@@ -133,7 +151,7 @@ function TooltipSerie({ active, payload, unidad, color }: PropsTooltip & { unida
   );
 }
 
-export default function GraficoSerie({ id, puntos, unidad, color, rango, log, alto = "h-[200px] sm:h-[240px]" }: GraficoSerieProps) {
+export default function GraficoSerie({ id, puntos, unidad, color, rango, log, alto = "h-[220px] sm:h-[260px]" }: GraficoSerieProps) {
   const filas = useMemo(() => {
     const recortados = recortar(puntos, rango);
     return recortados.map((p, i): FilaSerie => {
@@ -154,63 +172,80 @@ export default function GraficoSerie({ id, puntos, unidad, color, rango, log, al
   const quiebres = useMemo(() => filas.filter((f) => f.punto.quiebre !== null), [filas]);
   const hayEstimacion = filas.some((f) => f.estimacion !== null);
   const gradiente = `grad-${id}`;
+  const billones = aBillones(1, unidad);
+  // Con pocos quiebres cabe el mes al lado de cada línea; con muchos, se leen en el tooltip y debajo del gráfico.
+  const rotularQuiebres = quiebres.length <= 2;
 
   return (
-    <div className={alto}>
-      <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={filas} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id={gradiente} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.22} />
-              <stop offset="100%" stopColor={color} stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
-          <XAxis dataKey="mes" ticks={ticks} tickFormatter={(m: string) => m.slice(0, 4)} {...EJE_X} />
-          <YAxis
-            {...EJE_Y}
-            scale={log ? "log" : "auto"}
-            domain={log ? ["auto", "auto"] : [0, "auto"]}
-            allowDataOverflow={log}
-            tickFormatter={formatearCompacto}
-          />
-          <Tooltip
-            content={({ active, payload }) => <TooltipSerie active={active} payload={payload} unidad={unidad} color={color} />}
-            cursor={{ stroke: "var(--border)" }}
-          />
-          {quiebres.map((q) => (
-            <ReferenceLine key={q.mes} x={q.mes} stroke="var(--text-muted)" strokeDasharray="2 4" strokeOpacity={0.7} />
-          ))}
-          {hayEstimacion && (
-            <Line
+    <div>
+      <RotuloEje unidad={billones ? billones.unidadLarga : unidad} log={log} />
+      <div className={alto}>
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart data={filas} margin={{ top: 12, right: 8, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id={gradiente} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={color} stopOpacity={0.22} />
+                <stop offset="100%" stopColor={color} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+            <XAxis dataKey="mes" ticks={ticks} tickFormatter={(m: string) => m.slice(0, 4)} {...EJE_X} />
+            <YAxis
+              {...EJE_Y}
+              scale={log ? "log" : "auto"}
+              domain={log ? ["auto", "auto"] : [0, "auto"]}
+              allowDataOverflow={log}
+              tickFormatter={formateadorEje(unidad)}
+            />
+            <Tooltip
+              content={({ active, payload }) => <TooltipSerie active={active} payload={payload} unidad={unidad} color={color} />}
+              cursor={{ stroke: "var(--border)" }}
+            />
+            {quiebres.map((q) => (
+              <ReferenceLine
+                key={q.mes}
+                x={q.mes}
+                stroke="var(--text-secondary)"
+                strokeDasharray="2 4"
+                strokeOpacity={0.75}
+                label={
+                  rotularQuiebres
+                    ? { value: etiquetaMes(q.mes), position: "insideTopLeft", fontSize: 10, fill: "var(--text-muted)", offset: 6 }
+                    : undefined
+                }
+              />
+            ))}
+            {hayEstimacion && (
+              <Line
+                type="monotone"
+                dataKey="estimacion"
+                name="estimación"
+                stroke={color}
+                strokeDasharray="4 3"
+                strokeWidth={1.5}
+                dot={false}
+                connectNulls={false}
+                isAnimationActive={false}
+              />
+            )}
+            <Area
               type="monotone"
-              dataKey="estimacion"
-              name="estimación"
+              dataKey="dato"
+              name="dato"
               stroke={color}
-              strokeDasharray="4 3"
-              strokeWidth={1.5}
-              dot={false}
+              fill={`url(#${gradiente})`}
+              strokeWidth={1.75}
               connectNulls={false}
               isAnimationActive={false}
             />
-          )}
-          <Area
-            type="monotone"
-            dataKey="dato"
-            name="dato"
-            stroke={color}
-            fill={`url(#${gradiente})`}
-            strokeWidth={1.75}
-            connectNulls={false}
-            isAnimationActive={false}
-          />
-        </ComposedChart>
-      </ResponsiveContainer>
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
 
-// ── Un ratio publicado por ratios.py, con sus meses no aptos ──
+// ── Un ratio publicado por losratios, con sus meses no aptos ──
 
 interface FilaRatio {
   mes: string;
@@ -226,7 +261,7 @@ interface GraficoRatioProps {
   color: string;
   rango: Rango;
   log: boolean;
-  /** Qué significa que un mes no sea apto antes de cierto mes (A-R0-17). */
+  /** Qué significa que un mes no sea apto para métricas, en palabras. */
   notaNoApto: string;
   alto?: string;
 }
@@ -237,26 +272,22 @@ function TooltipRatio({ active, payload, unidad, color, notaNoApto }: PropsToolt
   if (!fila) return null;
   const p = fila.punto;
   return (
-    <div className="rounded-lg px-4 py-3 text-xs max-w-[280px]" style={ESTILO_TOOLTIP}>
-      <p className="mb-1 font-medium" style={{ color: "var(--text-secondary)" }}>
+    <div className="rounded-lg px-4 py-3 max-w-[280px]" style={ESTILO_TOOLTIP}>
+      <p className="meta mb-1" style={{ color: "var(--text-secondary)" }}>
         {etiquetaMes(p.mes)}
       </p>
-      <p className="tabular-nums font-medium" style={{ color }}>
-        {formatearNumero(p.valor, decimalesPara(p.valor))}{" "}
-        <span className="font-normal" style={{ color: "var(--text-muted)" }}>
-          {unidad}
-        </span>
+      <p className="font-mono text-sm tabular-nums font-medium" style={{ color }}>
+        {formatearNumero(p.valor, decimalesPara(p.valor))}
       </p>
-      <p className="text-[10px] mt-1 tabular-nums" style={{ color: "var(--text-muted)" }}>
-        error máximo por redondeo {formatearNumero(p.errorRedondeoPct, 4)} %
-      </p>
+      <p className="meta">{unidad}</p>
+      <p className="meta mt-1 tabular-nums">error máximo por redondeo {formatearPct(p.errorRedondeoPct, 4).replace(/^\+/, "")}</p>
       {p.enDisputa && (
-        <p className="text-[10px] mt-1" style={{ color: "var(--accent-amber)" }}>
-          valor en disputa con la segunda fuente (A-R0-20)
+        <p className="meta mt-1" style={{ color: "var(--accent-amber)" }}>
+          valor en disputa con la segunda fuente
         </p>
       )}
       {!p.apto && (
-        <p className="text-[10px] mt-1" style={{ color: "var(--accent-amber)" }}>
+        <p className="meta mt-1" style={{ color: "var(--accent-amber)" }}>
           no apto para métricas: {p.enDisputa ? "valor en disputa" : notaNoApto}
         </p>
       )}
@@ -264,7 +295,7 @@ function TooltipRatio({ active, payload, unidad, color, notaNoApto }: PropsToolt
   );
 }
 
-export function GraficoRatio({ id, puntos, unidad, color, rango, log, notaNoApto, alto = "h-[200px] sm:h-[240px]" }: GraficoRatioProps) {
+export function GraficoRatio({ id, puntos, unidad, color, rango, log, notaNoApto, alto = "h-[220px] sm:h-[260px]" }: GraficoRatioProps) {
   const filas = useMemo(() => {
     const recortados = recortar(puntos, rango);
     return recortados.map((p, i): FilaRatio => {
@@ -282,56 +313,59 @@ export function GraficoRatio({ id, puntos, unidad, color, rango, log, notaNoApto
   const gradiente = `grad-${id}`;
 
   return (
-    <div className={alto}>
-      <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={filas} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id={gradiente} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.22} />
-              <stop offset="100%" stopColor={color} stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
-          <XAxis dataKey="mes" ticks={ticks} tickFormatter={(m: string) => m.slice(0, 4)} {...EJE_X} />
-          <YAxis
-            {...EJE_Y}
-            scale={log ? "log" : "auto"}
-            domain={log ? ["auto", "auto"] : [0, "auto"]}
-            allowDataOverflow={log}
-            tickFormatter={formatearCompacto}
-          />
-          <Tooltip
-            content={({ active, payload }) => (
-              <TooltipRatio active={active} payload={payload} unidad={unidad} color={color} notaNoApto={notaNoApto} />
+    <div>
+      <RotuloEje unidad={unidad} log={log} />
+      <div className={alto}>
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart data={filas} margin={{ top: 12, right: 8, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id={gradiente} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={color} stopOpacity={0.22} />
+                <stop offset="100%" stopColor={color} stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+            <XAxis dataKey="mes" ticks={ticks} tickFormatter={(m: string) => m.slice(0, 4)} {...EJE_X} />
+            <YAxis
+              {...EJE_Y}
+              scale={log ? "log" : "auto"}
+              domain={log ? ["auto", "auto"] : [0, "auto"]}
+              allowDataOverflow={log}
+              tickFormatter={formatearEje}
+            />
+            <Tooltip
+              content={({ active, payload }) => (
+                <TooltipRatio active={active} payload={payload} unidad={unidad} color={color} notaNoApto={notaNoApto} />
+              )}
+              cursor={{ stroke: "var(--border)" }}
+            />
+            {hayNoAptos && (
+              <Line
+                type="monotone"
+                dataKey="noApto"
+                name="no apto para métricas"
+                stroke={color}
+                strokeOpacity={0.45}
+                strokeDasharray="3 3"
+                strokeWidth={1.25}
+                dot={false}
+                connectNulls={false}
+                isAnimationActive={false}
+              />
             )}
-            cursor={{ stroke: "var(--border)" }}
-          />
-          {hayNoAptos && (
-            <Line
+            <Area
               type="monotone"
-              dataKey="noApto"
-              name="no apto para métricas"
+              dataKey="apto"
+              name="apto para métricas"
               stroke={color}
-              strokeOpacity={0.45}
-              strokeDasharray="3 3"
-              strokeWidth={1.25}
-              dot={false}
+              fill={`url(#${gradiente})`}
+              strokeWidth={1.75}
               connectNulls={false}
               isAnimationActive={false}
             />
-          )}
-          <Area
-            type="monotone"
-            dataKey="apto"
-            name="apto para métricas"
-            stroke={color}
-            fill={`url(#${gradiente})`}
-            strokeWidth={1.75}
-            connectNulls={false}
-            isAnimationActive={false}
-          />
-        </ComposedChart>
-      </ResponsiveContainer>
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

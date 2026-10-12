@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "El Denominador",
     description:
-      "Cada precio es una fracción. Esto muestra el de abajo.",
+      "Cuando cambia el dinero, cambia la medida. Cada precio es una fracción; este sitio sigue el lado de abajo: la cantidad de dinero, según la publican sus emisores.",
     url: "https://eldenominador.com",
     siteName: "El Denominador",
     type: "website",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "El Denominador",
     description:
-      "Cada precio es una fracción. Esto muestra el de abajo.",
+      "Cuando cambia el dinero, cambia la medida. Cada precio es una fracción; este sitio sigue el lado de abajo: la cantidad de dinero, según la publican sus emisores.",
   },
   icons: {
     icon: "/favicon.svg",
@@ -52,7 +52,7 @@ export default function RootLayout({
           }}
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>

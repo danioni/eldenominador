@@ -7,7 +7,7 @@
     "build": "node scripts/datos.mjs verificar && next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/",
+    "test": "node --test tests/csv.test.mjs tests/datos.test.mjs tests/numeros.test.mjs",
     "datos:sincronizar": "node scripts/datos.mjs sincronizar",
     "datos:verificar": "node scripts/datos.mjs verificar"
   },
