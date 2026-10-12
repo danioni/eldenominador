@@ -41,8 +41,8 @@ export default function MetricCard({
   metodologia,
   delay = 0,
 }: MetricCardProps) {
-  const sube = interanualPct !== null && interanualPct >= 0;
-  const colorVariacion = interanualPct === null ? "var(--text-muted)" : sube ? "var(--accent)" : "var(--accent-blue)";
+  // La variación va en un color neutro en las dos direcciones: el signo dice
+  // el sentido. El rojo del sitio no se usa para cifras.
   // Los agregados en moneda se destacan en billones (10¹²); un ratio se queda
   // en su unidad propia.
   const billones = aBillones(valor, unidad);
@@ -50,7 +50,7 @@ export default function MetricCard({
   return (
     <div className={`card-glass card-accent-top rounded-xl p-5 md:p-6 fade-in-up fade-in-up-${delay} flex flex-col`}>
       <p className="rotulo mb-1.5 flex items-center gap-2">
-        <span className="w-1 h-1 rounded-full inline-block" style={{ background: colorVariacion }} />
+        <span className="w-1 h-1 rounded-full inline-block" style={{ background: "var(--text-muted)" }} />
         {label}
       </p>
       <p className="texto mb-4" style={{ fontSize: "0.75rem", lineHeight: 1.5 }}>
@@ -88,8 +88,9 @@ export default function MetricCard({
             <span
               className="font-mono text-xs font-medium tabular-nums px-1.5 py-0.5 rounded"
               style={{
-                color: colorVariacion,
-                background: sube ? "var(--accent-bg)" : "var(--accent-blue-bg)",
+                color: "var(--text-secondary)",
+                background: "var(--controls-bg)",
+                border: "1px solid var(--border-subtle)",
               }}
             >
               {formatearPct(interanualPct)}
