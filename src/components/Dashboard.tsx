@@ -380,7 +380,7 @@ export default function Dashboard({ datos }: { datos: Datos }) {
           </span>
         </h2>
         <p className="texto mt-5 max-w-2xl" style={{ fontSize: "1.0625rem", lineHeight: 1.55, color: "var(--text-primary)" }}>
-          Observa cómo evoluciona la cantidad de dinero y qué cambia al medir los activos contra ella.
+          Cómo evoluciona la cantidad de dinero y qué cambia al medir los activos contra ella.
         </p>
 
         <div className="card-glass rounded-xl p-6 sm:p-8 mt-8">

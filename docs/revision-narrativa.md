@@ -41,7 +41,7 @@ los movimientos de precios.
 
 | Texto | Dónde estaba | Qué se hizo |
 | --- | --- | --- |
-| "Los precios no suben. El dinero se encoge." | Titular de la portada (`src/components/Dashboard.tsx`) | Pasa a "Cuando cambia el dinero, cambia la medida.", con la bajada "Observa cómo evoluciona la cantidad de dinero y qué cambia al medir los activos contra ella." Sigue rotulado como tesis. |
+| "Los precios no suben. El dinero se encoge." | Titular de la portada (`src/components/Dashboard.tsx`) | Pasa a "Cuando cambia el dinero, cambia la medida.", con la bajada "Cómo evoluciona la cantidad de dinero y qué cambia al medir los activos contra ella." Sigue rotulado como tesis. |
 | "Cuando se dice que «el pan subió», se da por fijo el denominador. No lo es: la cantidad de dinero cambia todos los meses, y con ella el tamaño de la unidad con que se mide todo lo demás." | Bloque "¿Qué es el denominador?" | Se retira. El bloque pasa a la portada como explicación de la fracción: "Un precio es una fracción. Arriba está lo que se compra; abajo, la moneda en que se expresa su precio." Sin afirmar que la unidad se achica. |
 | "Entre X y Y, el M2 ... pasó de A a B miles de millones: Z veces." | Bloque "¿Qué es el denominador?" | Pasa al texto "Qué muestra" del gráfico de tres economías, en billones de USD y con la suma a tipo de cambio constante al lado. Es un dato con fuente (cálculo propio, A-D0-10 y A-D0-11). |
 | "¿Quién dijo que el dinero era escaso?" | Cierre | Pasa a "Ningún precio viene solo. Siempre trae su medida.": marco del sitio, sin juicio sobre escasez ni sobre precios. |
@@ -54,9 +54,12 @@ precios: "Todo precio es una fracción" (barra del ecosistema y pie), "La
 fracción tiene dos lados. Esta página es el de abajo." (cierre), "Los activos
 de arriba de la fracción" y "Un activo medido en otro" (pie).
 
-Nota sobre la bajada: "Observa cómo evoluciona..." lleva un imperativo. La regla
-"el sitio describe, no recomienda; no usa verbos de acción" apunta a no
-recomendar operaciones; aquí el verbo invita a mirar los datos, no a actuar
-sobre ellos. Si se prefiere evitar todo imperativo, la alternativa descriptiva
-es "Cómo evoluciona la cantidad de dinero y qué cambia al medir los activos
-contra ella."
+Nota sobre la bajada: la primera versión decía "Observa cómo evoluciona...",
+con un imperativo. La regla "el sitio describe, no recomienda; no usa verbos de
+acción" se aplica también aquí, así que la bajada quedó en forma descriptiva:
+"Cómo evoluciona la cantidad de dinero y qué cambia al medir los activos contra
+ella."
+
+La variación interanual de las tarjetas va en un solo color neutro en las dos
+direcciones, con el signo como única marca del sentido: el rojo del sitio no se
+usa para cifras.
